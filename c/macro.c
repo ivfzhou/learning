@@ -90,4 +90,10 @@ void test_macro(void) {
     printf("__STDC_HOSTED__ is %d\n", __STDC_HOSTED__);
     printf("__STDC_VERSION__ is %ld\n", __STDC_VERSION__);
     printf("__TIME__ is %s\n", __TIME__);
+#ifdef __STDC_NO_THREADS__
+    printf("__STDC_NO_THREADS__ is %s\n", __STDC_NO_THREADS__);
+#endif
+#ifdef __STDC_NO_ATOMICS__
+    printf("__STDC_NO_ATOMICS__ is %s\n", __STDC_NO_ATOMICS__);
+#endif
 }

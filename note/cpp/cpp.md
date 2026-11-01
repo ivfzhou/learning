@@ -227,35 +227,35 @@ C11 新增：`_Alignas`、`_Alignof`、`_Atomic`、`_Bool`、`_Complex`、`_Gene
 
 ## 1.11 C 标准头文件
 
-1. C89/C90 标准头文件：
-   - assert.h：断言宏。
-   - ctype.h：字符类型函数。
-   - errno.h：错误码。
-   - float.h：浮点数特性。
-   - limits.h：整数特性。
-   - locale.h：本地化。
-   - math.h：数学函数。
-   - setjmp.h：非本地跳转。
-   - signal.h：信号处理。
-   - stdarg.h：可变参数列表。
-   - stddef.h：常用类型和宏。
-   - stdio.h：标准输入输出。
-   - stdlib.h：通用工具函数。
-   - string.h：字符串处理。
-   - time.h：时间和日期函数。
-1. C99 标准新增头文件：
-   - complex.h：复数运算。
-   - fenv.h：浮点环境。
-   - inttypes.h：格式化输入输出。
-   - stdbool.h：布尔类型和值。
-   - stdint.h：定宽整数类型。
-   - tgmath.h：泛型数学函数。
-1. C11 标准新增头文件：
-   - stdalign.h：对齐支持。
-   - stdatomic.h：原子操作。
-   - stdnoreturn.h：noreturn 函数。
-   - threads.h：线程支持。
-   - uchar.h：Unicode 字符类型。
+1. assert.h：提供 assert 宏，用于在调试时，进行运行时断言诊断。
+1. complex.h：定义复数类型与复数算术运算函数。
+1. ctype.h：提供字符分类（如 isdigit、isalpha）与大小写转换函数。
+1. errno.h：定义错误码宏 errno 及错误编号（如 EDOM、ERANGE）。
+1. fenv.h：提供浮点环境（舍入模式、异常标志）的访问与控制。
+1. float.h：定义各浮点类型特性常量（如 FLT_MAX、DBL_EPSILON）。
+1. inttypes.h：提供定宽整数类型的格式化宏与最大宽度整数运算函数。
+1. iso646.h：定义 and、or、not 等运算符的替代拼写。
+1. limits.h：定义各整数类型取值范围的极限宏（如 INT_MAX、UCHAR_MAX）。
+1. locale.h：提供本地化设置（区域类别、小数点、货币格式等）。
+1. math.h：提供数学函数（三角函数、幂、对数、取整等）与宏常量。
+1. setjmp.h：提供 setjmp/longjmp 非局部跳转能力。
+1. signal.h：提供信号处理（signal、raise）及信号类型定义。
+1. stdalign.h：定义 alignas、alignof 宏，用于对齐说明。
+1. stdarg.h：提供可变参数列表处理（va_start、va_arg 等）。
+1. stdatomic.h：定义原子类型与原子操作。
+1. stdbool.h：定义 bool、true、false 布尔类型与值。
+1. stddef.h：定义常用类型与宏（size_t、NULL、offsetof、ptrdiff_t）。
+1. stdint.h：定义定宽整数类型（如 int32_t、uint64_t）及对应极限宏。
+1. stdio.h：提供标准输入/输出函数（printf、scanf、文件流操作）。
+1. stdlib.h：提供通用工具函数（内存分配、数值转换、exit、qsort 等）。
+1. stdnoreturn.h：定义 noreturn 宏，标记不返回的函数。
+1. string.h：提供字符串与内存操作函数（strcpy、memcpy、strlen 等）。
+1. tgmath.h：提供类型泛型数学宏，自动按参数类型选择对应函数。
+1. threads.h：提供线程、互斥量、条件变量等并发支持。
+1. time.h：提供日期与时间处理（time、clock、strftime、tm 结构）。
+1. uchar.h：定义 char16_t/char32_t 及 Unicode 字符转换函数。
+1. wchar.h：提供宽字符与多字节字符的输入/输出及转换函数。
+1. wctype.h：提供宽字符分类与大小写映射函数（iswalpha、towlower 等）。
 
 # 二、C++
 
