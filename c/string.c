@@ -41,7 +41,8 @@ void test_string(void) {
     char str6[] = "zß水🍌";
     char str7[] = "z\u00df\u6c34\U0001f34c";
     char str8[] = "\x7a\xc3\x9f\xe6\xb0\xb4\xf0\x9f\x8d\x8c";
-    wchar_t wstr[strlen(str6) + 1];
+    // MSVC 不支持 VLA（变长数组），用字节数组长度保证足够容纳转换后的宽字符。
+    wchar_t wstr[sizeof str6];
     swprintf(wstr, sizeof wstr / sizeof *wstr, L"%s", str6);
     wprintf(L"wstr is %ls\n", wstr);
     printf("strcmp(str6, str7) is %d\n", strcmp(str6, str7));
