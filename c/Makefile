@@ -42,22 +42,36 @@ ifeq ($(OS), Windows_NT)
         export PATH := $(shell cmd /v:on /c "call "$(VCVARS)" >nul 2>&1 && echo !PATH!")
         $(info "Searching MSVC end")
     endif
-else ifeq ($(OS), Linux)
-    SHELL := /bin/sh
+else
+    SHELL := sh
     CC := gcc
     EXE_SUFFIX :=
     OBJ_SUFFIX := .o
+    # -std=c17：按 ISO C17 标准编译（对应 MSVC 的 /std:c17）
+    # -finput-charset=UTF-8：声明源文件字符集为 UTF-8，供预处理器/编译器正确解读源码
+    # -fexec-charset=UTF-8：把窄字符串/字符字面量按 UTF-8 编码写入目标文件（对应 MSVC 的 /utf-8）
+    # -Wpedantic：对非严格符合 C 标准的代码给出警告（依赖 -std=c17 生效）
+    # -Winline：函数被声明为 inline 却未能真正内联时给出警告
+    # -Wall：启用一组常用告警
+    # -Wextra：在 -Wall 基础上启用额外告警（对应 MSVC 的 /W4）
+    # -Wno-unused-variable：忽略“局部/静态变量已定义但未使用”的告警（对应 /wd4189）
+    # -Wno-unused-function：忽略“静态函数已定义但未调用”的告警（对应 /wd4505）
+    # -Wno-unused-local-typedefs：忽略“局部 typedef 已定义但未使用”的告警
+    # -Wno-unused-parameter：忽略“函数形参未使用”的告警（对应 /wd4100）
+    # -O0：禁用优化，便于调试（debug 默认）
+    # -g3：生成最详细的调试信息，含宏定义（对应 MSVC 的 /Z7）
+    # -O3：开启最激进的优化（对应 MSVC 的 /O2）
+    # -flto：链接时优化 / LTO，编译与链接阶段均需开启（对应 MSVC 的 /GL /LTCG）
+    # -DNDEBUG：定义 NDEBUG，使 assert 失效（对应 MSVC 的 /DNDEBUG）
     CFLAGS_COMMON := -std=c17 -finput-charset=UTF-8 -fexec-charset=UTF-8 \
                      -Wpedantic -Winline -Wall -Wextra \
-                     -Wno-unused-variable -Wno-unused-function -Wno-unused-local-typedef -Wno-unused-parameter
+                     -Wno-unused-variable -Wno-unused-function -Wno-unused-local-typedefs -Wno-unused-parameter
     CFLAGS_DEBUG := $(CFLAGS_COMMON) -O0 -g3
     CFLAGS_RELEASE := $(CFLAGS_COMMON) -O3 -DNDEBUG -flto
     LDFLAGS_DEBUG :=
     LDFLAGS_RELEASE := -flto
     OUT_OBJ = -c -o $@
     OUT_EXE = -o $@
-else
-    $(error 不支持的操作系统 $(OS)：仅支持 Linux 和 Windows，终止运行)
 endif
 
 
@@ -68,37 +82,46 @@ $(info $$(OS) $(OS))
 
 
 TARGET := c
+BUILD_DIR := build/
 TARGET_DEBUG := $(TARGET)-debug
 TARGET_RELEASE := $(TARGET)-release
 SOURCES := $(sort $(wildcard *.c *.C))
 SOURCES += bitwise/bitwise.c
-DEBUG_OBJECTS := $(addprefix debug/, $(patsubst %.c,%$(OBJ_SUFFIX),$(patsubst %.C,%$(OBJ_SUFFIX),$(SOURCES))))
-RELEASE_OBJECTS := $(addprefix release/, $(patsubst %.c,%$(OBJ_SUFFIX),$(patsubst %.C,%$(OBJ_SUFFIX),$(SOURCES))))
-BUILD_DIRS := $(sort $(patsubst %/,%,$(dir $(DEBUG_OBJECTS) $(RELEASE_OBJECTS))))
+DEBUG_OBJECTS := $(addprefix $(BUILD_DIR)/debug/, $(patsubst %.c,%$(OBJ_SUFFIX),$(patsubst %.C,%$(OBJ_SUFFIX),$(SOURCES))))
+RELEASE_OBJECTS := $(addprefix $(BUILD_DIR)/release/, $(patsubst %.c,%$(OBJ_SUFFIX),$(patsubst %.C,%$(OBJ_SUFFIX),$(SOURCES))))
 ifeq ($(OS), Windows_NT)
-    DUMMY := $(shell $(foreach d,$(subst /,\,$(BUILD_DIRS)),if not exist "$(d)" mkdir "$(d)" &) rem)
-    CLEAN_COMMAND := if exist debug rmdir /s /q debug & if exist release rmdir /s /q release \
+    CLEAN_COMMAND := if exist $(BUILD_DIR) rmdir /s /q $(BUILD_DIR) \
                      & if exist $(TARGET_DEBUG)$(EXE_SUFFIX) del /f /q $(TARGET_DEBUG)$(EXE_SUFFIX) \
                      & if exist $(TARGET_RELEASE)$(EXE_SUFFIX) del /f /q $(TARGET_RELEASE)$(EXE_SUFFIX) \
                      & if exist $(TARGET_DEBUG).pdb del /f /q $(TARGET_DEBUG).pdb
 else
-    DUMMY := $(shell mkdir -p $(BUILD_DIRS))
-    CLEAN_COMMAND := rm -rf debug/ release/ $(TARGET_DEBUG)$(EXE_SUFFIX) $(TARGET_RELEASE)$(EXE_SUFFIX) \
+    CLEAN_COMMAND := rm -rf $(BUILD_DIR) $(TARGET_DEBUG)$(EXE_SUFFIX) $(TARGET_RELEASE)$(EXE_SUFFIX) \
                      $(TARGET_DEBUG).pdb $(TARGET_RELEASE).pdb
 endif
-
 $(info $$(SOURCES) $(SOURCES))
 
 
 .PHONY: debug release all clean format-code
 
 
-debug/%$(OBJ_SUFFIX): %.c
+.SECONDEXPANSION:
+
+
+$(BUILD_DIR)/debug/%$(OBJ_SUFFIX): %.c | $$(dir $$@)
 	@$(CC) $(CFLAGS_DEBUG) $(OUT_OBJ) $<
 
 
-release/%$(OBJ_SUFFIX): %.c
+$(BUILD_DIR)/release/%$(OBJ_SUFFIX): %.c | $$(dir $$@)
 	@$(CC) $(CFLAGS_RELEASE) $(OUT_OBJ) $<
+
+
+ifeq ($(OS), Windows_NT)
+%/:
+	@if not exist "$(subst /,\,$@)" mkdir "$(subst /,\,$@)"
+else
+%/:
+	@mkdir -p $@
+endif
 
 
 $(TARGET_DEBUG)$(EXE_SUFFIX): $(DEBUG_OBJECTS)
@@ -122,5 +145,5 @@ format-code:
 
 
 all: $(TARGET_RELEASE)$(EXE_SUFFIX)
-debug: $(TARGET_DEBUG)$(EXE_SUFFIX)
-release: $(TARGET_RELEASE)$(EXE_SUFFIX)
+build-debug: $(TARGET_DEBUG)$(EXE_SUFFIX)
+build-release: $(TARGET_RELEASE)$(EXE_SUFFIX)
