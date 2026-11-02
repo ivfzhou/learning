@@ -3,7 +3,23 @@ ifeq ($(OS), Windows_NT)
     CC := cl.exe
     EXE_SUFFIX := .exe
     OBJ_SUFFIX := .obj
-    # /wd4100 未使用形参；/wd4189 未使用局部变量；/wd4505 未使用局部函数（对应 gcc 的 -Wno-unused-*）
+    # /nologo：不显示编译器版本/版权横幅
+    # /std:c17：按 ISO C17 标准编译（MSVC 以 -std:c17 对齐 gcc 的 -std=c17）
+    # /utf-8：源码与执行字符集均按 UTF-8 处理（对应 gcc 的 -finput-charset/-fexec-charset=UTF-8）
+    # /D_CRT_SECURE_NO_WARNINGS：关闭 MSVC CRT 安全函数（scanf 等）的 C4996 弃用警告
+    # /W4：最高告警级别，等价于 gcc 的 -Wall -Wextra
+    # /wd4100：忽略 C4100：函数中未被引用的形参（对应 gcc 的 -Wno-unused-parameter）
+    # /wd4189：忽略 C4189：局部变量已初始化但未被引用（对应 -Wno-unused-variable）
+    # /wd4505：忽略 C4505：已定义但从未被调用的局部函数（对应 -Wno-unused-function）
+    # /Od：禁用优化（debug 默认）
+    # /Z7：把调试信息直接写入 .obj，不生成独立 .pdb（等价于 gcc 的 -g）
+    # /O2：最大化速度优化（对应 gcc 的 -O2/-O3）
+    # /GL：全程序优化 / LTO（配合链接阶段的 /LTCG）
+    # /DNDEBUG：定义 NDEBUG，使 assert 失效（对应 gcc 的 -DNDEBUG）
+    # /LTCG：链接时代码生成，与编译期的 /GL 配套做跨目标文件优化
+    # /c：只编译不链接，生成目标文件（对应 gcc 的 -c）
+    # /Fo:$@：指定目标文件名（对应 gcc 的 -o $@）
+    # /Fe:$@：指定链接产出的可执行文件名（对应 gcc 的 -o $@）
     CFLAGS_COMMON := /nologo /std:c17 /utf-8 /D_CRT_SECURE_NO_WARNINGS /W4 /wd4100 /wd4189 /wd4505
     CFLAGS_DEBUG := $(CFLAGS_COMMON) /Od /Z7
     CFLAGS_RELEASE := $(CFLAGS_COMMON) /O2 /GL /DNDEBUG
@@ -11,23 +27,20 @@ ifeq ($(OS), Windows_NT)
     LDFLAGS_RELEASE := /nologo /LTCG
     OUT_OBJ = /c /Fo:$@
     OUT_EXE = /Fe:$@
-    # 若 cl.exe 不在 PATH 中（未在 VS 开发者命令提示符下运行），
-    # 则通过 vswhere 定位 vcvars64.bat，并将其配置好的环境变量导出给所有 recipe。
-    ifeq ($(shell where cl.exe >nul 2>&1 && echo yes),yes)
-        MSVC_ENV_READY := yes
-    else
-        VSWHERE := $(subst ",,$(shell echo "%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe"))
-        VCVARS := $(strip $(shell "$(VSWHERE)" -latest -products * \
-                   -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath))\VC\Auxiliary\Build\vcvars64.bat
-        ifeq ($(VCVARS),)
+    ifneq ($(shell where cl.exe >nul 2>&1 && echo yes),yes)
+        $(info Searching MSVC)
+        VSWHERE := $(shell echo "%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe")
+        VSPATH := $(shell "$(VSWHERE)" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath)
+        VSPATH := $(strip $(VSPATH))
+        ifeq ($(VSPATH),)
             $(error 未找到 cl.exe，且无法通过 vswhere 定位 Visual Studio；请安装 VS/Build Tools 或在开发者命令提示符中运行)
         endif
-        # 注意：需用 cmd /v:on 延迟展开（!VAR!），否则 %VAR% 会在 call 之前展开而取到旧值
+        VCVARS := $(VSPATH)\VC\Auxiliary\Build\vcvars64.bat
         export INCLUDE := $(shell cmd /v:on /c "call "$(VCVARS)" >nul 2>&1 && echo !INCLUDE!")
-        export LIB     := $(shell cmd /v:on /c "call "$(VCVARS)" >nul 2>&1 && echo !LIB!")
+        export LIB := $(shell cmd /v:on /c "call "$(VCVARS)" >nul 2>&1 && echo !LIB!")
         export LIBPATH := $(shell cmd /v:on /c "call "$(VCVARS)" >nul 2>&1 && echo !LIBPATH!")
-        export PATH    := $(shell cmd /v:on /c "call "$(VCVARS)" >nul 2>&1 && echo !PATH!")
-        MSVC_ENV_READY := yes
+        export PATH := $(shell cmd /v:on /c "call "$(VCVARS)" >nul 2>&1 && echo !PATH!")
+        $(info "Searching MSVC end")
     endif
 else ifeq ($(OS), Linux)
     SHELL := /bin/sh
@@ -44,19 +57,15 @@ else ifeq ($(OS), Linux)
     OUT_OBJ = -c -o $@
     OUT_EXE = -o $@
 else
-    $(error "不支持的操作系统 $(OS)：仅支持 Linux 和 Windows，终止运行")
+    $(error 不支持的操作系统 $(OS)：仅支持 Linux 和 Windows，终止运行)
 endif
-
-# 用户自定义的额外链接参数（如 -pthread、-lm 等）。
-LDFLAGS_EXTRA :=
 
 
 $(info $$(CC) $(CC))
 $(info $$(MAKE) $(MAKE))
 $(info $$(SHELL) $(SHELL))
 $(info $$(OS) $(OS))
-$(info $$(CFLAGS_DEBUG) $(CFLAGS_DEBUG))
-$(info $$(CFLAGS_RELEASE) $(CFLAGS_RELEASE))
+
 
 TARGET := c
 TARGET_DEBUG := $(TARGET)-debug
@@ -71,17 +80,14 @@ ifeq ($(OS), Windows_NT)
     CLEAN_COMMAND := if exist debug rmdir /s /q debug & if exist release rmdir /s /q release \
                      & if exist $(TARGET_DEBUG)$(EXE_SUFFIX) del /f /q $(TARGET_DEBUG)$(EXE_SUFFIX) \
                      & if exist $(TARGET_RELEASE)$(EXE_SUFFIX) del /f /q $(TARGET_RELEASE)$(EXE_SUFFIX) \
-                     & if exist $(TARGET_DEBUG).pdb del /f /q $(TARGET_DEBUG).pdb \
-                     & if exist $(TARGET_RELEASE).pdb del /f /q $(TARGET_RELEASE).pdb
+                     & if exist $(TARGET_DEBUG).pdb del /f /q $(TARGET_DEBUG).pdb
 else
     DUMMY := $(shell mkdir -p $(BUILD_DIRS))
-    CLEAN_COMMAND := rm -rf debug/ release/ $(TARGET_DEBUG) $(TARGET_RELEASE) \
-                     $(basename $(TARGET_DEBUG)).pdb $(basename $(TARGET_RELEASE)).pdb
+    CLEAN_COMMAND := rm -rf debug/ release/ $(TARGET_DEBUG)$(EXE_SUFFIX) $(TARGET_RELEASE)$(EXE_SUFFIX) \
+                     $(TARGET_DEBUG).pdb $(TARGET_RELEASE).pdb
 endif
 
 $(info $$(SOURCES) $(SOURCES))
-$(info $$(BUILD_DIRS) $(BUILD_DIRS))
-$(info $$(CLEAN_COMMAND) $(CLEAN_COMMAND))
 
 
 .PHONY: debug release all clean format-code
@@ -96,12 +102,12 @@ release/%$(OBJ_SUFFIX): %.c
 
 
 $(TARGET_DEBUG)$(EXE_SUFFIX): $(DEBUG_OBJECTS)
-	@$(CC) $(LDFLAGS_DEBUG) $(LDFLAGS_EXTRA) $(OUT_EXE) $^
+	@$(CC) $(LDFLAGS_DEBUG) $(OUT_EXE) $^
 	@echo build debug done
 
 
 $(TARGET_RELEASE)$(EXE_SUFFIX): $(RELEASE_OBJECTS)
-	@$(CC) $(LDFLAGS_RELEASE) $(LDFLAGS_EXTRA) $(OUT_EXE) $^
+	@$(CC) $(LDFLAGS_RELEASE) $(OUT_EXE) $^
 	@echo build release done
 
 
