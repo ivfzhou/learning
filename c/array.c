@@ -21,7 +21,7 @@ void test_array(void) {
 
     char str2[] = "hello\0world"; // 字符串打印只有 hello。
     printf("str1 is ");
-    for (int i = 0; i < sizeof(str2); i++) {
+    for (size_t i = 0; i < sizeof(str2); i++) {
         printf("%c", str1[i]);
     }
     printf("\n");
@@ -44,18 +44,18 @@ void test_array(void) {
         {1, 2, 3},
         {4, 5, 6},
     };
-    printf("sizeof(arr) is %zd\n", sizeof(arr));
-    printf("the number of bytes in arr[2][3] + 1 is %llu and sizeof(int[3]) is %zd\n",
+    printf("sizeof(arr) is %zu\n", sizeof(arr));
+    printf("the number of bytes in arr[2][3] + 1 is %llu and sizeof(int[3]) is %zu\n",
            (unsigned long long)((uintptr_t)(arr + 1) - (uintptr_t)arr),
            sizeof(int[3])); // 表示加 sizeof(int[3])
-    printf("the number of bytes in arr[0] + 1 is %llu and sizeof(int) is %zd\n",
+    printf("the number of bytes in arr[0] + 1 is %llu and sizeof(int) is %zu\n",
            (unsigned long long)((uintptr_t)(arr[0] + 1) - (uintptr_t)arr[0]),
            sizeof(int)); // 表示加 sizeof(int)
 
     printf("\n===\n\n");
 
     int* ptr = NULL;
-    printf("sizeof(ptr) is %zd\n", sizeof(ptr));
+    printf("sizeof(ptr) is %zu\n", sizeof(ptr));
 
     printf("\n===\n\n");
 
@@ -63,7 +63,7 @@ void test_array(void) {
         int x;
         char arr[]; // 末尾的不定长数组
     };
-    printf("sizeof(struct has_flexible_aray_member) is %zd\n", sizeof(struct has_flexible_aray_member));
+    printf("sizeof(struct has_flexible_aray_member) is %zu\n", sizeof(struct has_flexible_aray_member));
     struct has_flexible_aray_member* s1 = malloc(sizeof(struct has_flexible_aray_member) + 12 * sizeof(char));
     s1->arr[0] = 'h';
     s1->arr[1] = '\0';

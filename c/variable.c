@@ -22,22 +22,22 @@ extern int file_var1;
 // 线程私有变量。
 _Thread_local int file_thread_var = 1;
 
-int* block_static_var() {
+int* block_static_var(void) {
     static int block_static_var;
     printf("block_static_var is %d\n", block_static_var);
     return &block_static_var;
 }
 
-void block_extern_var() {
+void block_extern_var(void) {
     // 引用外部变量。
     extern int file_var;
 }
 
-void block_auto_var() { auto int file_var; }
+void block_auto_var(void) { auto int file_var; }
 
 
 // 寄存器变量。
-void register_var() {
+void register_var(void) {
     register int i = 99;
     // printf("%d, %p", i, &i); // 寄存器变量不可取址。
 }

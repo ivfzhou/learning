@@ -77,7 +77,7 @@ debug: override CFLAGS := $(CFLAGS_DEBUG) # 让专属值优先。
 	$(CC) $(CFLAGS) -c $< -o $@
 
 
-# 分支语句。
+# 分支语句。ifeq 后面必须有空白。
 ifeq ($(DEBUG), 1)
     CFLAGS += -g
 else ifeq ()

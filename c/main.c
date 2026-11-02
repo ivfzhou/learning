@@ -45,7 +45,7 @@ static void test_scanf2(void) {
 }
 
 int main(const int argv, const char* argc[]) {
-    test_macro();
+    test_alignment();
     printf("OK 完成\n");
     return 0;
 }

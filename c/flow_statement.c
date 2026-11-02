@@ -15,6 +15,9 @@ void test_flow_statement(void) {
     goto F1;
     {
         printf("not print\n");
-    F1: { printf("print\n"); }
+    F1:
+        {
+            printf("print\n");
+        }
     }
 }

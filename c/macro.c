@@ -27,9 +27,9 @@
 #define GOOD
 
 // 把当前行号重置为 1000。
-#line 1000
+// #line 1000
 // 把行号重置为 10，把文件名重置为 macro_reset.c。
-#line 10 "macro_reset.c"
+// #line 10 "macro_reset.c"
 
 // 编译器指令。
 #pragma message "Hello"
@@ -86,7 +86,9 @@ void test_macro(void) {
     printf("__DATE__ is %s\n", __DATE__);
     printf("__FILE__ is %s\n", __FILE__);
     printf("__LINE__ is %d\n", __LINE__);
+#ifdef __STDC__
     printf("__STDC__ is %d\n", __STDC__);
+#endif
     printf("__STDC_HOSTED__ is %d\n", __STDC_HOSTED__);
     printf("__STDC_VERSION__ is %ld\n", __STDC_VERSION__);
     printf("__TIME__ is %s\n", __TIME__);

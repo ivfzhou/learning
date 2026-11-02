@@ -48,7 +48,7 @@ void print_bit_field_layout_right_to_left(const void* target, const size_t size)
     if (!target) return;
 
     const unsigned char* ptr = (unsigned char*)target;
-    for (int i = 0; i < size - 1; i++) {
+    for (size_t i = 0; i < size - 1; i++) {
         print_byte_in_binary_right_to_left(ptr[i]);
         printf("_");
     }
