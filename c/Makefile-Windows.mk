@@ -3,6 +3,7 @@ LD := link.exe
 AR := lib.exe
 SHELL := cmd.exe
 
+
 MSVC_FREE_GOALS := clean format-code
 GOALS := $(if $(MAKECMDGOALS),$(MAKECMDGOALS),all)
 NEED_MSVC := $(filter-out $(MSVC_FREE_GOALS),$(GOALS))
@@ -20,6 +21,7 @@ ifeq ($(if $(NEED_MSVC),$(shell where cl.exe >nul 2>&1 && echo no || echo yes),n
     export PATH := $(shell cmd /v:on /c "call "$(VCVARS)" >nul 2>&1 && echo !PATH!")
     $(info Searching MSVC end)
 endif
+
 
 SOURCES := $(sort $(wildcard *.c))
 HEADERS := $(sort $(wildcard *.h))

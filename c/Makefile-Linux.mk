@@ -2,6 +2,7 @@ CC := gcc
 AR := ar
 SHELL := sh
 
+
 SOURCES := $(sort $(wildcard *.c))
 HEADERS := $(sort $(wildcard *.h))
 LIB_SOURCES := $(filter-out main.c,$(SOURCES))

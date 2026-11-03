@@ -3,6 +3,7 @@ LD := link.exe
 AR := lib.exe
 SHELL := cmd.exe
 
+
 MSVC_FREE_GOALS := clean format-code
 GOALS := $(if $(MAKECMDGOALS),$(MAKECMDGOALS),all)
 NEED_MSVC := $(filter-out $(MSVC_FREE_GOALS),$(GOALS))
