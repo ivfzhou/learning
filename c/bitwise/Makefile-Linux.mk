@@ -18,7 +18,8 @@ $(info $$(SOURCES) $(SOURCES))
 $(info $$(HEADERS) $(HEADERS))
 
 
-.PHONY: all clean format-code run-static-release run-static-debug run-shared-release run-shared-debug build-static-debug build-static-release build-shared-debug build-shared-release
+.PHONY: all clean format-code run-static-release run-static-debug run-shared-release run-shared-debug \
+        build-static-debug build-static-release build-shared-debug build-shared-release
 
 
 all: run-static-release
