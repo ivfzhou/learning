@@ -96,6 +96,6 @@ void test_macro(void) {
     printf("__STDC_NO_THREADS__ is %s\n", __STDC_NO_THREADS__);
 #endif
 #ifdef __STDC_NO_ATOMICS__
-    printf("__STDC_NO_ATOMICS__ is %s\n", __STDC_NO_ATOMICS__);
+    printf("__STDC_NO_ATOMICS__ is %d\n", __STDC_NO_ATOMICS__);
 #endif
 }

@@ -1,8 +1,10 @@
 #ifndef COM_GITEE_IVFZHOU_C_FUNCTION_H
 #define COM_GITEE_IVFZHOU_C_FUNCTION_H
 
-_Noreturn void noreturn_func(void);
+#include "export.h"
 
-void test_function(void);
+C_API _Noreturn void noreturn_func(void);
+
+C_API void test_function(void);
 
 #endif

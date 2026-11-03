@@ -24,10 +24,10 @@ static void test_cast(void) {
     char result_char = (char)~c;
     char result_int = ~c;
     printf("result_char bit pattern is ");
-    print_bit_field_layout_left_to_right_reverse((unsigned char*)&result_char, sizeof(char));
+    PrintBitFieldLayoutLeftToRightReverse((unsigned char*)&result_char, sizeof(char));
 
     printf("result_int bit pattern is ");
-    print_bit_field_layout_left_to_right_reverse((unsigned char*)&result_int, sizeof(char));
+    PrintBitFieldLayoutLeftToRightReverse((unsigned char*)&result_int, sizeof(char));
 }
 
 // scanf 输入格式中的空白表示跳过空白寻找下一个字符。
@@ -44,8 +44,17 @@ static void test_scanf2(void) {
     printf("res=%d, str=%s\n", res, str);
 }
 
+static void test_scanf3(void) {
+    char str[4];
+    scanf("%3s", str);
+    char str2[4];
+    scanf("%3s", str2);
+    printf("str2=%s\n", str2);
+}
+
 int main(const int argv, const char* argc[]) {
-    test_alignment();
+    TestArray();
+    TestBitField();
     printf("OK 完成\n");
     return 0;
 }
