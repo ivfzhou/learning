@@ -10,9 +10,11 @@ NEED_MSVC := $(filter-out $(MSVC_FREE_GOALS),$(GOALS))
 ifeq ($(if $(NEED_MSVC),$(shell where cl.exe >nul 2>&1 && echo no || echo yes),no),yes)
     $(info Searching MSVC)
     VSWHERE := $(shell echo "%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe")
-    VSPATH := $(strip $(shell "$(VSWHERE)" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath))
+    VSPATH := $(strip $(shell "$(VSWHERE)" -latest -products * \
+                              -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath))
     ifeq ($(VSPATH),)
-        $(error cl.exe was not found, and Visual Studio could not be located via vswhere; please install VS/Build Tools or run from the Developer Command Prompt)
+        $(error cl.exe was not found, and Visual Studio could not be located via vswhere; \
+                please install VS/Build Tools or run from the Developer Command Prompt)
     endif
     VCVARS := $(VSPATH)\VC\Auxiliary\Build\vcvars64.bat
     export INCLUDE := $(shell cmd /v:on /c "call "$(VCVARS)" >nul 2>&1 && echo !INCLUDE!")
@@ -39,7 +41,7 @@ $(info $$(HEADERS) $(HEADERS))
 
 
 .PHONY: all clean format-code \
-        run-static-release run-static-debug run-shared-release run-shared-debug \
+        run-static-debug run-static-release run-shared-debug run-shared-release \
         build-static-debug build-static-release build-shared-debug build-shared-release
 
 
@@ -51,19 +53,23 @@ all: run-static-release
 
 
 build/static-debug/%.obj: %.c | $(STATIC_DEBUG_OBJECT_DIRS)
-	@$(CC) /nologo /std:c17 /utf-8 /D_CRT_SECURE_NO_WARNINGS /W4 /wd4100 /wd4189 /wd4505 /Od /Z7 /MDd /c /Fo:$@ $<
+	@$(CC) /nologo /std:c17 /utf-8 /D_CRT_SECURE_NO_WARNINGS /W4 /wd4100 /wd4189 /wd4505 \
+	       /Od /Z7 /MDd /c /Fo:$@ $<
 
 
 build/static-release/%.obj: %.c | $(STATIC_RELEASE_OBJECT_DIRS)
-	@$(CC) /nologo /std:c17 /utf-8 /D_CRT_SECURE_NO_WARNINGS /W4 /wd4100 /wd4189 /wd4505 /O2 /GL /DNDEBUG /MD /c /Fo:$@ $<
+	@$(CC) /nologo /std:c17 /utf-8 /D_CRT_SECURE_NO_WARNINGS /W4 /wd4100 /wd4189 /wd4505 \
+	       /O2 /GL /DNDEBUG /MD /c /Fo:$@ $<
 
 
 build/shared-debug/%.obj: %.c | $(SHARED_DEBUG_OBJECT_DIRS)
-	@$(CC) /nologo /std:c17 /utf-8 /D_CRT_SECURE_NO_WARNINGS /DC_EXPORTS /W4 /wd4100 /wd4189 /wd4505 /Od /Z7 /MDd /c /Fo:$@ $<
+	@$(CC) /nologo /std:c17 /utf-8 /D_CRT_SECURE_NO_WARNINGS /DC_EXPORTS /W4 /wd4100 /wd4189 /wd4505 \
+	       /Od /Z7 /MDd /c /Fo:$@ $<
 
 
 build/shared-release/%.obj: %.c | $(SHARED_RELEASE_OBJECT_DIRS)
-	@$(CC) /nologo /std:c17 /utf-8 /D_CRT_SECURE_NO_WARNINGS /DC_EXPORTS /W4 /wd4100 /wd4189 /wd4505 /O2 /GL /DNDEBUG /MD /c /Fo:$@ $<
+	@$(CC) /nologo /std:c17 /utf-8 /D_CRT_SECURE_NO_WARNINGS /DC_EXPORTS /W4 /wd4100 /wd4189 /wd4505 \
+	       /O2 /GL /DNDEBUG /MD /c /Fo:$@ $<
 
 
 c-static-debug.lib: $(STATIC_DEBUG_OBJECTS)
@@ -76,43 +82,52 @@ c-static-release.lib: $(STATIC_RELEASE_OBJECTS)
 	@echo build static release done
 
 
-c-shared-debug.dll: $(SHARED_DEBUG_OBJECTS) bitwise/bitwise-shared-debug.lib
-	@$(LD) /nologo /DLL /DEBUG /INCREMENTAL:NO /OUT:$@ $^
+c-shared-debug.dll c-shared-debug.lib &: $(SHARED_DEBUG_OBJECTS) bitwise/bitwise-shared-debug.lib
+	@$(LD) /nologo /DLL /DEBUG /INCREMENTAL:NO /OUT:c-shared-debug.dll $^
 	@echo build shared debug done
 
 
-c-shared-release.dll: $(SHARED_RELEASE_OBJECTS) bitwise/bitwise-shared-release.lib
-	@$(LD) /nologo /DLL /LTCG /OUT:$@ $^
+c-shared-release.dll c-shared-release.lib &: $(SHARED_RELEASE_OBJECTS) bitwise/bitwise-shared-release.lib
+	@$(LD) /nologo /DLL /LTCG /OUT:c-shared-release.dll $^
 	@echo build shared release done
 
 
-c-static-debug.exe: c-static-debug.lib build/static-debug/main.obj bitwise/bitwise-static-debug.lib
-	@$(LD) /nologo /DEBUG /INCREMENTAL:NO /OUT:$@ build/static-debug/main.obj c-static-debug.lib bitwise/bitwise-static-debug.lib
+c-static-debug.exe: build/static-debug/main.obj c-static-debug.lib bitwise/bitwise-static-debug.lib
+	@$(LD) /nologo /DEBUG /INCREMENTAL:NO /OUT:$@ $^
 	@echo build static debug exe done
 
 
-c-static-release.exe: c-static-release.lib build/static-release/main.obj bitwise/bitwise-static-release.lib
-	@$(LD) /nologo /LTCG /OUT:$@ build/static-release/main.obj c-static-release.lib bitwise/bitwise-static-release.lib
+c-static-release.exe: build/static-release/main.obj c-static-release.lib bitwise/bitwise-static-release.lib
+	@$(LD) /nologo /LTCG /OUT:$@ $^
 	@echo build static release exe done
 
 
-c-shared-debug.exe: c-shared-debug.dll build/static-debug/main.obj bitwise/bitwise-shared-debug.dll
-	@$(LD) /nologo /DEBUG /INCREMENTAL:NO /OUT:$@ build/static-debug/main.obj c-shared-debug.lib
+c-shared-debug.exe: build/shared-debug/main.obj c-shared-debug.lib bitwise/bitwise-shared-debug.lib
+	@$(LD) /nologo /DEBUG /INCREMENTAL:NO /OUT:$@ $^
 	@echo build shared debug exe done
 
 
-c-shared-release.exe: c-shared-release.dll build/static-release/main.obj bitwise/bitwise-shared-release.dll
-	@$(LD) /nologo /LTCG /OUT:$@ build/static-release/main.obj c-shared-release.lib
+c-shared-release.exe: build/shared-release/main.obj c-shared-release.lib bitwise/bitwise-shared-release.lib
+	@$(LD) /nologo /LTCG /OUT:$@ $^
 	@echo build shared release exe done
 
 
 clean:
-	@if exist build rmdir /s /q build
-	@for %%f in (c-static-debug.lib c-static-release.lib \
-	             c-shared-debug.dll c-shared-debug.exp c-shared-debug.lib c-shared-debug.pdb \
-	             c-shared-release.dll c-shared-release.exp c-shared-release.lib c-shared-release.pdb \
-	             c-static-debug.exe c-static-debug.pdb c-static-release.exe c-static-release.pdb \
-	             c-shared-debug.exe c-shared-debug.pdb c-shared-release.exe c-shared-release.pdb) do @if exist %%f del /f /q %%f
+	@(if exist build rmdir /s /q build) \
+	&& (if exist c-static-debug.exe del /f /q c-static-debug.exe) \
+	&& (if exist c-static-debug.lib del /f /q c-static-debug.lib) \
+	&& (if exist c-static-debug.pdb del /f /q c-static-debug.pdb) \
+	&& (if exist c-static-release.exe del /f /q c-static-release.exe) \
+	&& (if exist c-static-release.lib del /f /q c-static-release.lib) \
+	&& (if exist c-shared-debug.dll del /f /q c-shared-debug.dll) \
+	&& (if exist c-shared-debug.exe del /f /q c-shared-debug.exe) \
+	&& (if exist c-shared-debug.exp del /f /q c-shared-debug.exp) \
+	&& (if exist c-shared-debug.lib del /f /q c-shared-debug.lib) \
+	&& (if exist c-shared-debug.pdb del /f /q c-shared-debug.pdb) \
+	&& (if exist c-shared-release.dll del /f /q c-shared-release.dll) \
+	&& (if exist c-shared-release.exe del /f /q c-shared-release.exe) \
+	&& (if exist c-shared-release.exp del /f /q c-shared-release.exp) \
+	&& (if exist c-shared-release.lib del /f /q c-shared-release.lib)
 	@echo clean done
 
 

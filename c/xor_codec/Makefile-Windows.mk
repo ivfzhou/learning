@@ -10,9 +10,11 @@ NEED_MSVC := $(filter-out $(MSVC_FREE_GOALS),$(GOALS))
 ifeq ($(if $(NEED_MSVC),$(shell where cl.exe >nul 2>&1 && echo no || echo yes),no),yes)
     $(info Searching MSVC)
     VSWHERE := $(shell echo "%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe")
-    VSPATH := $(strip $(shell "$(VSWHERE)" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86x64 -property installationPath))
+    VSPATH := $(strip $(shell "$(VSWHERE)" -latest -products * \
+                              -requires Microsoft.VisualStudio.Component.VC.Tools.x86x64 -property installationPath))
     ifeq ($(VSPATH),)
-        $(error cl.exe was not found, and Visual Studio could not be located via vswhere; please install VS/Build Tools or run from the Developer Command Prompt)
+        $(error cl.exe was not found, and Visual Studio could not be located via vswhere; \
+                please install VS/Build Tools or run from the Developer Command Prompt)
     endif
     VCVARS := $(VSPATH)\VC\Auxiliary\Build\vcvars64.bat
     export INCLUDE := $(shell cmd /v:on /c "call "$(VCVARS)" >nul 2>&1 && echo !INCLUDE!")
@@ -40,7 +42,7 @@ $(info $$(HEADERS) $(HEADERS))
 
 
 .PHONY: all clean format-code \
-        run-static-release run-static-debug run-shared-release run-shared-debug \
+        run-static-debug run-static-release  run-shared-debug run-shared-release\
         build-static-debug build-static-release build-shared-debug build-shared-release
 
 
@@ -52,19 +54,23 @@ all: run-static-release
 
 
 build/static-debug/%.obj: %.c | $(STATIC_DEBUG_OBJECT_DIRS)
-	@$(CC) /nologo /std:c17 /utf-8 /D_CRT_SECURE_NO_WARNINGS /W4 /wd4100 /wd4189 /wd4505 /Od /Z7 /MDd /c /Fo:$@ $<
+	@$(CC) /nologo /std:c17 /utf-8 /D_CRT_SECURE_NO_WARNINGS /W4 /wd4100 /wd4189 /wd4505 \
+	       /Od /Z7 /MDd /c /Fo:$@ $<
 
 
 build/static-release/%.obj: %.c | $(STATIC_RELEASE_OBJECT_DIRS)
-	@$(CC) /nologo /std:c17 /utf-8 /D_CRT_SECURE_NO_WARNINGS /W4 /wd4100 /wd4189 /wd4505 /O2 /GL /DNDEBUG /MD /c /Fo:$@ $<
+	@$(CC) /nologo /std:c17 /utf-8 /D_CRT_SECURE_NO_WARNINGS /W4 /wd4100 /wd4189 /wd4505 \
+	       /O2 /GL /DNDEBUG /MD /c /Fo:$@ $<
 
 
 build/shared-debug/%.obj: %.c | $(SHARED_DEBUG_OBJECT_DIRS)
-	@$(CC) /nologo /std:c17 /utf-8 /D_CRT_SECURE_NO_WARNINGS /W4 /wd4100 /wd4189 /wd4505 /Od /Z7 /MDd /DXOR_CODEC_EXPORTS /c /Fo:$@ $<
+	@$(CC) /nologo /std:c17 /utf-8 /D_CRT_SECURE_NO_WARNINGS /W4 /wd4100 /wd4189 /wd4505 \
+	       /Od /Z7 /MDd /DXOR_CODEC_EXPORTS /c /Fo:$@ $<
 
 
 build/shared-release/%.obj: %.c | $(SHARED_RELEASE_OBJECT_DIRS)
-	@$(CC) /nologo /std:c17 /utf-8 /D_CRT_SECURE_NO_WARNINGS /W4 /wd4100 /wd4189 /wd4505 /O2 /GL /DNDEBUG /MD /DXOR_CODEC_EXPORTS /c /Fo:$@ $<
+	@$(CC) /nologo /std:c17 /utf-8 /D_CRT_SECURE_NO_WARNINGS /W4 /wd4100 /wd4189 /wd4505 \
+	       /O2 /GL /DNDEBUG /MD /DXOR_CODEC_EXPORTS /c /Fo:$@ $<
 
 
 xor_codec-static-debug.lib: $(STATIC_DEBUG_OBJECTS)
@@ -77,54 +83,52 @@ xor_codec-static-release.lib: $(STATIC_RELEASE_OBJECTS)
 	@echo build static release done
 
 
-xor_codec-shared-debug.dll: $(SHARED_DEBUG_OBJECTS)
-	@$(LD) /nologo /DLL /DEBUG /INCREMENTAL:NO /OUT:$@ $^
+xor_codec-shared-debug.dll xor_codec-shared-debug.lib &: $(SHARED_DEBUG_OBJECTS)
+	@$(LD) /nologo /DLL /DEBUG /INCREMENTAL:NO /OUT:xor_codec-shared-debug.dll $^
 	@echo build shared debug done
 
 
-xor_codec-shared-release.dll: $(SHARED_RELEASE_OBJECTS)
-	@$(LD) /nologo /DLL /LTCG /OUT:$@ $^
+xor_codec-shared-release.dll xor_codec-shared-release.lib &: $(SHARED_RELEASE_OBJECTS)
+	@$(LD) /nologo /DLL /LTCG /OUT:xor_codec-shared-release.dll $^
 	@echo build shared release done
 
 
-xor_codec-static-debug.exe: xor_codec-static-debug.lib build/static-debug/main.obj
-	@$(LD) /nologo /DEBUG /INCREMENTAL:NO /OUT:$@ build/static-debug/main.obj xor_codec-static-debug.lib
+xor_codec-static-debug.exe: build/static-debug/main.obj xor_codec-static-debug.lib
+	@$(LD) /nologo /DEBUG /INCREMENTAL:NO /OUT:$@ $^
 	@echo build static debug exe done
 
 
-xor_codec-static-release.exe: xor_codec-static-release.lib build/static-release/main.obj
-	@$(LD) /nologo /LTCG /OUT:$@ build/static-release/main.obj xor_codec-static-release.lib
+xor_codec-static-release.exe: build/static-release/main.obj xor_codec-static-release.lib
+	@$(LD) /nologo /LTCG /OUT:$@ $^
 	@echo build static release exe done
 
 
-xor_codec-shared-debug.exe: xor_codec-shared-debug.dll build/static-debug/main.obj
-	@$(LD) /nologo /DEBUG /INCREMENTAL:NO /OUT:$@ build/static-debug/main.obj xor_codec-shared-debug.lib
+xor_codec-shared-debug.exe: build/shared-debug/main.obj xor_codec-shared-debug.lib
+	@$(LD) /nologo /DEBUG /INCREMENTAL:NO /OUT:$@ $^
 	@echo build shared debug exe done
 
 
-xor_codec-shared-release.exe: xor_codec-shared-release.dll build/static-release/main.obj
-	@$(LD) /nologo /LTCG /OUT:$@ build/static-release/main.obj xor_codec-shared-release.lib
+xor_codec-shared-release.exe: build/shared-release/main.obj xor_codec-shared-release.lib
+	@$(LD) /nologo /LTCG /OUT:$@ $^
 	@echo build shared release exe done
 
 
 clean:
 	@(if exist build rmdir /s /q build) \
-	&& (if exist xor_codec-static-debug.lib del /f /q xor_codec-static-debug.lib) \
-	&& (if exist xor_codec-static-release.lib del /f /q xor_codec-static-release.lib) \
-	&& (if exist xor_codec-shared-debug.lib del /f /q xor_codec-shared-debug.lib) \
-	&& (if exist xor_codec-shared-debug.exp del /f /q xor_codec-shared-debug.exp) \
-	&& (if exist xor_codec-shared-debug.dll del /f /q xor_codec-shared-debug.dll) \
-	&& (if exist xor_codec-shared-debug.pdb del /f /q xor_codec-shared-debug.pdb) \
-	&& (if exist xor_codec-shared-release.lib del /f /q xor_codec-shared-release.lib) \
-	&& (if exist xor_codec-shared-release.dll del /f /q xor_codec-shared-release.dll) \
-	&& (if exist xor_codec-shared-release.exp del /f /q xor_codec-shared-release.exp) \
 	&& (if exist xor_codec-static-debug.exe del /f /q xor_codec-static-debug.exe) \
+	&& (if exist xor_codec-static-debug.lib del /f /q xor_codec-static-debug.lib) \
 	&& (if exist xor_codec-static-debug.pdb del /f /q xor_codec-static-debug.pdb) \
 	&& (if exist xor_codec-static-release.exe del /f /q xor_codec-static-release.exe) \
+	&& (if exist xor_codec-static-release.lib del /f /q xor_codec-static-release.lib) \
+	&& (if exist xor_codec-shared-debug.dll del /f /q xor_codec-shared-debug.dll) \
 	&& (if exist xor_codec-shared-debug.exe del /f /q xor_codec-shared-debug.exe) \
+	&& (if exist xor_codec-shared-debug.exp del /f /q xor_codec-shared-debug.exp) \
+	&& (if exist xor_codec-shared-debug.lib del /f /q xor_codec-shared-debug.lib) \
 	&& (if exist xor_codec-shared-debug.pdb del /f /q xor_codec-shared-debug.pdb) \
+	&& (if exist xor_codec-shared-release.dll del /f /q xor_codec-shared-release.dll) \
 	&& (if exist xor_codec-shared-release.exe del /f /q xor_codec-shared-release.exe) \
-	&& (if exist xor_codec-shared-release.pdb del /f /q xor_codec-shared-release.pdb)
+	&& (if exist xor_codec-shared-release.exp del /f /q xor_codec-shared-release.exp) \
+	&& (if exist xor_codec-shared-release.lib del /f /q xor_codec-shared-release.lib)
 	@echo clean done
 
 
