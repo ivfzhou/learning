@@ -80,12 +80,12 @@ bitwise_negation-static-release: build/static-release/main.o libbitwise_negation
 	@echo build static release exe done
 
 
-bitwise_negation-shared-debug:build/static-debug/main.o libbitwise_negation-shared-debug.so
+bitwise_negation-shared-debug:build/shared-debug/main.o libbitwise_negation-shared-debug.so
 	@$(CC) -o $@ $^ -Wl,-rpath,'$$ORIGIN'
 	@echo build shared debug exe done
 
 
-bitwise_negation-shared-release: build/static-release/main.o libbitwise_negation-shared-release.so
+bitwise_negation-shared-release: build/shared-release/main.o libbitwise_negation-shared-release.so
 	@$(CC) -flto -o $@ $^ -Wl,-rpath,'$$ORIGIN'
 	@echo build shared release exe done
 

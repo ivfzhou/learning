@@ -81,12 +81,12 @@ xor_codec-static-release: build/static-release/main.o libxor_codec-static-releas
 	@echo build static release exe done
 
 
-xor_codec-shared-debug: build/static-debug/main.o libxor_codec-shared-debug.so
+xor_codec-shared-debug: build/shared-debug/main.o libxor_codec-shared-debug.so
 	@$(CC) -o $@ $^ -Wl,-rpath,'$$ORIGIN'
 	@echo build shared debug exe done
 
 
-xor_codec-shared-release: build/static-release/main.o libxor_codec-shared-release.so
+xor_codec-shared-release: build/shared-release/main.o libxor_codec-shared-release.so
 	@$(CC) -flto -o $@ $^ -Wl,-rpath,'$$ORIGIN'
 	@echo build shared release exe done
 

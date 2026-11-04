@@ -80,12 +80,12 @@ c-static-release: build/static-release/main.o libc-static-release.a bitwise/libb
 	@echo build static release exe done
 
 
-c-shared-debug: build/static-debug/main.o libc-shared-debug.so bitwise/libbitwise-shared-debug.so
+c-shared-debug: build/shared-debug/main.o libc-shared-debug.so bitwise/libbitwise-shared-debug.so
 	@$(CC) -o $@ $^ -Wl,-rpath,'$$ORIGIN'
 	@echo build shared debug exe done
 
 
-c-shared-release: build/static-release/main.o libc-shared-release.so bitwise/libbitwise-shared-release.so
+c-shared-release: build/shared-release/main.o libc-shared-release.so bitwise/libbitwise-shared-release.so
 	@$(CC) -flto -o $@ $^ -Wl,-rpath,'$$ORIGIN'
 	@echo build shared release exe done
 
