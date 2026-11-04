@@ -3,6 +3,6 @@
 
 #include "export.h"
 
-C_API void test_string(void);
+C_API void TestString(void);
 
 #endif

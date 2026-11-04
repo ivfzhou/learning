@@ -3,8 +3,8 @@
 
 #include "export.h"
 
-C_API _Noreturn void noreturn_func(void);
+C_API _Noreturn void NoreturnFunc(void);
 
-C_API void test_function(void);
+C_API void TestFunction(void);
 
 #endif

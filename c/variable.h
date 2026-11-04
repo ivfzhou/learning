@@ -3,6 +3,18 @@
 
 #include "export.h"
 
-C_API void test_variable(void);
+extern int FileVar;
+
+extern const int FileConstVar;
+
+extern volatile int FileVolatileVar;
+
+extern volatile const int FileVolatileConstVar;
+
+extern int* restrict FileRestrictPtr;
+
+extern _Thread_local int FileThreadVar;
+
+C_API void TestVariable(void);
 
 #endif

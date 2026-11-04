@@ -1,4 +1,5 @@
 #include <stdalign.h>
+#include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
 
@@ -34,7 +35,10 @@ void TestAlignment(void) {
     printf("_Alignof(float)=%zu, sizeof(float)=%zu\n", _Alignof(float), sizeof(float));
     printf("_Alignof(double)=%zu, sizeof(double)=%zu\n", _Alignof(double), sizeof(double));
     printf("_Alignof(long double)=%zu, sizeof(long double)=%zu\n", _Alignof(long double), sizeof(long double));
-    printf("_Alignof(struct S)=%zu, sizeof(struct S)=%zu\n", _Alignof(struct S), sizeof(struct S));
+    printf("_Alignof(struct S)=%zu, sizeof(struct S)=%zu, offsetof(struct S, b)=%zu\n",
+           _Alignof(struct S),
+           sizeof(struct S),
+           offsetof(struct S, b));
 
     printf("\n===\n\n");
 

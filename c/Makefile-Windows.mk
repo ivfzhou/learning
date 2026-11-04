@@ -38,7 +38,8 @@ $(info $$(SOURCES) $(SOURCES))
 $(info $$(HEADERS) $(HEADERS))
 
 
-.PHONY: all clean format-code run-static-release run-static-debug run-shared-release run-shared-debug \
+.PHONY: all clean format-code \
+        run-static-release run-static-debug run-shared-release run-shared-debug \
         build-static-debug build-static-release build-shared-debug build-shared-release
 
 
@@ -75,12 +76,12 @@ c-static-release.lib: $(STATIC_RELEASE_OBJECTS)
 	@echo build static release done
 
 
-c-shared-debug.dll: $(SHARED_DEBUG_OBJECTS) bitwise/bitwise-static-debug.lib
+c-shared-debug.dll: $(SHARED_DEBUG_OBJECTS) bitwise/bitwise-shared-debug.lib
 	@$(LD) /nologo /DLL /DEBUG /INCREMENTAL:NO /OUT:$@ $^
 	@echo build shared debug done
 
 
-c-shared-release.dll: $(SHARED_RELEASE_OBJECTS) bitwise/bitwise-static-release.lib
+c-shared-release.dll: $(SHARED_RELEASE_OBJECTS) bitwise/bitwise-shared-release.lib
 	@$(LD) /nologo /DLL /LTCG /OUT:$@ $^
 	@echo build shared release done
 
@@ -95,12 +96,12 @@ c-static-release.exe: c-static-release.lib build/static-release/main.obj bitwise
 	@echo build static release exe done
 
 
-c-shared-debug.exe: c-shared-debug.dll build/static-debug/main.obj
+c-shared-debug.exe: c-shared-debug.dll build/static-debug/main.obj bitwise/bitwise-shared-debug.dll
 	@$(LD) /nologo /DEBUG /INCREMENTAL:NO /OUT:$@ build/static-debug/main.obj c-shared-debug.lib
 	@echo build shared debug exe done
 
 
-c-shared-release.exe: c-shared-release.dll build/static-release/main.obj
+c-shared-release.exe: c-shared-release.dll build/static-release/main.obj bitwise/bitwise-shared-release.dll
 	@$(LD) /nologo /LTCG /OUT:$@ build/static-release/main.obj c-shared-release.lib
 	@echo build shared release exe done
 
@@ -111,8 +112,7 @@ clean:
 	             c-shared-debug.dll c-shared-debug.exp c-shared-debug.lib c-shared-debug.pdb \
 	             c-shared-release.dll c-shared-release.exp c-shared-release.lib c-shared-release.pdb \
 	             c-static-debug.exe c-static-debug.pdb c-static-release.exe c-static-release.pdb \
-	             c-shared-debug.exe c-shared-debug.pdb c-shared-release.exe c-shared-release.pdb \
-	             bitwise-shared-debug.dll bitwise-shared-release.dll) do @if exist %%f del /f /q %%f
+	             c-shared-debug.exe c-shared-debug.pdb c-shared-release.exe c-shared-release.pdb) do @if exist %%f del /f /q %%f
 	@echo clean done
 
 

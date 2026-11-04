@@ -2,8 +2,7 @@
 
 #include "flow_statement.h"
 
-// 流程语句
-void test_flow_statement(void) {
+void TestFlowStatement(void) {
     // if () { ... } else if () { ... } else { ... }
     // switch () { case n: break; default: }
     // while () { ... }

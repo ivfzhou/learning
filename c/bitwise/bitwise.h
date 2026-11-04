@@ -1,5 +1,5 @@
-#ifndef GITEE_COM_IVFZHOU_C_BITWISE_H
-#define GITEE_COM_IVFZHOU_C_BITWISE_H
+#ifndef COM_GITEE_IVFZHOU_C_BITWISE_H
+#define COM_GITEE_IVFZHOU_C_BITWISE_H
 
 #include <stdlib.h>
 
@@ -26,16 +26,22 @@ BITWISE_API unsigned char BitToggle(unsigned char flag, unsigned char index);
 // 检查 flag 第 index 位是否为 1。
 BITWISE_API _Bool BitCheck(unsigned char flag, unsigned char index);
 
-// 从左到右打印每个字节，字节中从左到右打印每个位。
-BITWISE_API void PrintBitFieldLayoutLeftToTight(const void* target, size_t size);
+// 低位地址放低位字节就是小端序。
+// 例如 0x11223344 存进地址 0x100
+// 地址:  0x100  0x101  0x102  0x103
+// 内容:   44     33     22     11
+//        最低位              最高位
 
-// 从左到右打印每个字节，字节中从右到左打印每个位。
-BITWISE_API void PrintBitFieldLayoutRightToLeft(const void* target, size_t size);
+// 字节位从左到右打印，单个字节从左到右打印。
+BITWISE_API void PrintBitLtrLtr(const void* target, size_t size);
 
-// 从右到左打印每个字节，字节中从右到左打印每个位。
-BITWISE_API void PrintBitFieldLayoutRightToLeftReverse(const void* target, size_t size);
+// 字节位从左到右打印，单个字节从右到左打印。
+BITWISE_API void PrintBitLtrRtl(const void* target, size_t size);
 
-// 从右到左打印每个字节，字节中从左到右打印每个位。
-BITWISE_API void PrintBitFieldLayoutLeftToRightReverse(const void* target, size_t size);
+// 字节位从右到左打印，单个字节从左到右打印。
+BITWISE_API void PrintBitRtlLtr(const void* target, size_t size);
+
+// 字节位从右到左打印，单个字节从右到左打印。
+BITWISE_API void PrintBitRtlRtl(const void* target, size_t size);
 
 #endif

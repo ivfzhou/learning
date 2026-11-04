@@ -1,10 +1,25 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "xor_codec.h"
 
-int xor_codec(const char* secret, const char* input_file, const char* output_file) {
-    if (!secret || !input_file || !output_file) {
+static void printErrMsg(const char* format, const char* file) {
+    size_t len = strlen(format) + strlen(file) + 1;
+    char* msg = malloc(len);
+    if (!msg) {
+        char fallback[256];
+        snprintf(fallback, sizeof(fallback), format, file);
+        perror(fallback);
+        return;
+    }
+    snprintf(msg, len, format, file);
+    perror(msg);
+    free(msg);
+}
+
+int xorCodec(const char* secret, const char* inputFile, const char* outputFile) {
+    if (!secret || !inputFile || !outputFile) {
         fprintf(stderr, "xor_codec: please check parameters\n");
         return 1;
     }
@@ -18,124 +33,88 @@ int xor_codec(const char* secret, const char* input_file, const char* output_fil
     unsigned char ch;
 
     // 简单判断输入输出文件相同。
-    if (!strcmp(input_file, output_file)) {
-        FILE* f = fopen(input_file, "r+b");
-        if (!f) {
-            const char* format = "xor_codec: can't open file %s";
-            char msg[strlen(input_file) + strlen(format) + 1];
-            sprintf(msg, format, input_file);
-            perror(msg);
+    if (!strcmp(inputFile, outputFile)) {
+        FILE* file = fopen(inputFile, "r+b");
+        if (!file) {
+            printErrMsg("xor_codec: can't open file %s", inputFile);
             return 1;
         }
 
         while (1) {
-            ch = fgetc(f);
-            if (feof(f)) break;
-            if (ferror(f)) {
-                const char* format = "xor_codec: failed to read file %s";
-                char msg[strlen(input_file) + strlen(format) + 1];
-                sprintf(msg, format, input_file);
-                perror(msg);
-                fclose(f);
+            ch = fgetc(file);
+            if (feof(file)) break;
+            if (ferror(file)) {
+                printErrMsg("xor_codec: failed to read file %s", inputFile);
+                fclose(file);
                 return 1;
             }
 
             if (len == cursor) cursor = 0;
             ch ^= *(secret + cursor++);
-            if (fseek(f, -1, SEEK_CUR)) {
-                const char* format = "xor_codec: can't seek file %s";
-                char msg[strlen(input_file) + strlen(format) + 1];
-                sprintf(msg, format, input_file);
-                perror(msg);
-                fclose(f);
+            if (fseek(file, -1, SEEK_CUR)) {
+                printErrMsg("xor_codec: can't seek file %s", inputFile);
+                fclose(file);
                 return 1;
             }
-            fputc(ch, f);
-            if (ferror(f)) {
-                const char* format = "xor_codec: failed to write file %s";
-                char msg[strlen(input_file) + strlen(format) + 1];
-                sprintf(msg, format, input_file);
-                perror(msg);
-                fclose(f);
+            fputc(ch, file);
+            if (ferror(file)) {
+                printErrMsg("xor_codec: failed to write file %s", inputFile);
+                fclose(file);
                 return 1;
             }
 
-            if (fflush(f) == EOF) {
-                const char* format = "xor_codec: failed to flush file %s";
-                char msg[strlen(format) + strlen(input_file) + 1];
-                sprintf(msg, format, input_file);
-                perror(msg);
-                fclose(f);
+            if (fflush(file) == EOF) {
+                printErrMsg("xor_codec: failed to flush file %s", inputFile);
+                fclose(file);
             }
         }
 
-        if (fclose(f) == EOF) {
-            const char* format = "xor_codec: failed to close file %s";
-            char msg[strlen(output_file) + strlen(format) + 1];
-            sprintf(msg, format, output_file);
-            perror(msg);
+        if (fclose(file) == EOF) {
+            printErrMsg("xor_codec: failed to close file %s", outputFile);
             return 1;
         }
+
         return 0;
     }
 
-    FILE* fi = fopen(input_file, "rb");
-    if (!fi) {
-        const char* format = "xor_codec: failed to open file %s";
-        char msg[strlen(input_file) + strlen(format) + 1];
-        sprintf(msg, format, input_file);
-        perror(msg);
+    FILE* fileIn = fopen(inputFile, "rb");
+    if (!fileIn) {
+        printErrMsg("xor_codec: failed to open file %s", inputFile);
         return 1;
     }
-    FILE* fo = fopen(output_file, "wb");
-    if (!fo) {
-        const char* format = "xor_codec: failed to open file %s";
-        char msg[strlen(output_file) + strlen(format) + 1];
-        sprintf(msg, format, output_file);
-        perror(msg);
-        fclose(fi);
+    FILE* fileOut = fopen(outputFile, "wb");
+    if (!fileOut) {
+        printErrMsg("xor_codec: failed to open file %s", outputFile);
+        fclose(fileIn);
         return 1;
     }
 
     while (1) {
-        ch = fgetc(fi);
-        if (feof(fi)) break;
-
-        if (ferror(fi)) {
-            const char* format = "xor_codec: failed to read file %s";
-            char msg[strlen(input_file) + strlen(format) + 1];
-            sprintf(msg, format, input_file);
-            perror(msg);
-            fclose(fi);
-            fclose(fo);
+        ch = fgetc(fileIn);
+        if (feof(fileIn)) break;
+        if (ferror(fileIn)) {
+            printErrMsg("xor_codec: failed to read file %s", inputFile);
+            fclose(fileIn);
+            fclose(fileOut);
             return 1;
         }
         if (len == cursor) cursor = 0;
         ch ^= *(secret + cursor++);
-        fputc(ch, fo);
-        if (ferror(fo)) {
-            const char* format = "xor_codec: failed to write file %s";
-            char msg[strlen(output_file) + strlen(format) + 1];
-            sprintf(msg, format, output_file);
-            perror(msg);
-            fclose(fi);
-            fclose(fo);
+        fputc(ch, fileOut);
+        if (ferror(fileOut)) {
+            printErrMsg("xor_codec: failed to write file %s", outputFile);
+            fclose(fileIn);
+            fclose(fileOut);
             return 1;
         }
     }
 
-    if (fclose(fi) == EOF) {
-        const char* format = "xor_codec: failed to close file %s";
-        char msg[strlen(input_file) + strlen(format) + 1];
-        sprintf(msg, format, input_file);
-        perror(msg);
+    if (fclose(fileIn) == EOF) {
+        printErrMsg("xor_codec: failed to close file %s", inputFile);
         return 1;
     }
-    if (fclose(fo) == EOF) {
-        const char* format = "xor_codec: failed to close file %s";
-        char msg[strlen(output_file) + strlen(format) + 1];
-        sprintf(msg, format, output_file);
-        perror(msg);
+    if (fclose(fileOut) == EOF) {
+        printErrMsg("xor_codec: failed to close file %s", outputFile);
         return 1;
     }
     return 0;

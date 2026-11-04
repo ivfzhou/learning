@@ -2,7 +2,6 @@
 // #define NDEBUG
 
 #include <assert.h>
-#include <stdio.h>
 
 #include "assertion.h"
 
@@ -10,9 +9,7 @@
 _Static_assert(1 > 0, "assertion message");
 
 void TestAssertion(void) {
-    int x;
-    while (!scanf("%d", &x)) {
-    }
+    int x = 10;
     int y = x - 9;
     assert(y > 0);
 }

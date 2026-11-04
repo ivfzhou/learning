@@ -30,7 +30,7 @@ _Bool BitCheck(const unsigned char flag, const unsigned char index) {
     return (flag & mask) == mask;
 }
 
-void PrintBitFieldLayoutLeftToTight(const void* target, const size_t size) {
+void PrintBitLtrLtr(const void* target, const size_t size) {
     if (!size || size < 0) return;
     if (!target) return;
 
@@ -43,7 +43,21 @@ void PrintBitFieldLayoutLeftToTight(const void* target, const size_t size) {
     printf("\n");
 }
 
-void PrintBitFieldLayoutRightToLeft(const void* target, const size_t size) {
+void PrintBitLtrRtl(const void* target, const size_t size) {
+    if (!size || size < 0) return;
+    if (!target) return;
+
+    const unsigned char* ptr = (unsigned char*)target;
+    for (size_t i = size - 1;;) {
+        printByteInBinaryLeftToRight(ptr[i]);
+        if (!i) break;
+        printf("_");
+        i--;
+    }
+    printf("\n");
+}
+
+void PrintBitRtlLtr(const void* target, const size_t size) {
     if (!size || size < 0) return;
     if (!target) return;
 
@@ -56,27 +70,13 @@ void PrintBitFieldLayoutRightToLeft(const void* target, const size_t size) {
     printf("\n");
 }
 
-void PrintBitFieldLayoutRightToLeftReverse(const void* target, const size_t size) {
+void PrintBitRtlRtl(const void* target, const size_t size) {
     if (!size || size < 0) return;
     if (!target) return;
 
     const unsigned char* ptr = (unsigned char*)target;
     for (size_t i = size - 1;;) {
         printByteInBinaryRightToLeft(ptr[i]);
-        if (!i) break;
-        printf("_");
-        i--;
-    }
-    printf("\n");
-}
-
-void PrintBitFieldLayoutLeftToRightReverse(const void* target, const size_t size) {
-    if (!size || size < 0) return;
-    if (!target) return;
-
-    const unsigned char* ptr = (unsigned char*)target;
-    for (size_t i = size - 1;;) {
-        printByteInBinaryLeftToRight(ptr[i]);
         if (!i) break;
         printf("_");
         i--;

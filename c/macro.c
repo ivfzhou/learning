@@ -66,7 +66,7 @@
 
 #include "macro.h"
 
-void test_macro(void) {
+void TestMacro(void) {
     printf("macro X is %lf\n", X);
     printf("macro PI is %lf\n", PI);
     printf("macro FN(a) is %d\n", FN(2 + 2));

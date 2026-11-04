@@ -22,7 +22,7 @@ static int sum(int paramn, ...) {
     return sum;
 }
 
-void test_varargs(void) {
+void TestVarargs(void) {
     int res = sum(4, 1, 1, 1);
-    printf("res is %d\n", res);
+    printf("res = %d\n", res);
 }

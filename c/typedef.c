@@ -1,29 +1,29 @@
 #include "typedef.h"
 
 // 声明语法。
-typedef unsigned int uint;
+typedef unsigned int Uint;
 
 typedef struct {
     double real;
     double imag;
-} complex;
+} Complex;
 
-typedef void (*func)(char*);
+typedef void (*Func)(char*);
 
-void test_typedef(void) {
+void TestTypedef(void) {
     // 仅供函数内使用。
     typedef unsigned char BYTE;
-    complex c; // 等价于 struct{double real; double imag;} c;
-    func fn;
+    Complex c; // 等价于 struct{double real; double imag;} c;
+    Func fn;
 }
 
 // typedef 和 define 的区别。
 
 #define BYTE char*
 
-typedef char* byte;
+typedef char* Byte;
 
-void test_typedef0(void) {
+void TestTypedef2(void) {
     BYTE x, y; // 等价于 char *x, y;
-    byte x1, y1; // 等价于 char *x1, *y1;
+    Byte x1, y1; // 等价于 char *x1, *y1;
 }

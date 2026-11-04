@@ -10,8 +10,7 @@ static void help() {
             "\toutput_file: output file\n"
             "Example: \n"
             "\tencode: xor_codec your_secret /path/to/file /path/to/output\n"
-            "\tdecode: xor_codec your_secret /path/to/file /path/to/output\n"
-    );
+            "\tdecode: xor_codec your_secret /path/to/file /path/to/output\n");
 }
 
 int main(const int argv, const char* argc[]) {
@@ -19,7 +18,7 @@ int main(const int argv, const char* argc[]) {
         help();
         return 1;
     }
-    if (argv == 3) return xor_codec(argc[1], argc[2], argc[2]);
+    if (argv == 3) return xorCodec(argc[1], argc[2], argc[2]);
 
-    return xor_codec(argc[1], argc[2], argc[3]);
+    return xorCodec(argc[1], argc[2], argc[3]);
 }

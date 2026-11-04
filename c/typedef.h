@@ -3,8 +3,8 @@
 
 #include "export.h"
 
-C_API void test_typedef(void);
+C_API void TestTypedef(void);
 
-C_API void test_typedef0(void);
+C_API void TestTypedef2(void);
 
 #endif

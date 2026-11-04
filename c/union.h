@@ -3,6 +3,6 @@
 
 #include "export.h"
 
-C_API void test_union(void);
+C_API void TestUnion(void);
 
 #endif

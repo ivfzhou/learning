@@ -3,6 +3,6 @@
 
 #include "export.h"
 
-C_API void test_generic(void);
+C_API void TestGeneric(void);
 
 #endif

@@ -4,12 +4,12 @@
 #include "export.h"
 
 // 声明结构体语法。
-struct user {
+struct User {
     int age;
 };
 
-C_API void test_struct(void);
+C_API void TestStruct(void);
 
-C_API struct user test_struct0(int x);
+C_API struct User TestStruct2(int x);
 
 #endif

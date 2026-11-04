@@ -3,6 +3,6 @@
 
 #include "export.h"
 
-C_API void test_flow_statement(void);
+C_API void TestFlowStatement(void);
 
 #endif

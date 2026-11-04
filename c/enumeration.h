@@ -4,8 +4,8 @@
 #include "export.h"
 
 // 枚举的声明
-enum week {
-    MON, /* 值为0 */
+enum Week {
+    MON, /* 值为 0 */
     TUES,
     WED,
     THURS,
@@ -14,13 +14,6 @@ enum week {
     SUN
 };
 
-enum level {
-    LOW = 100,
-    MEDIUM = 500,
-    HIGH = 2000,
-    HIGHEST /* 值为2001 */
-};
-
-C_API enum week test_enumeration(void);
+C_API enum Week TestEnumeration(void);
 
 #endif

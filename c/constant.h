@@ -3,6 +3,6 @@
 
 #include "export.h"
 
-C_API void test_constant(void);
+C_API void TestConstant(void);
 
 #endif
