@@ -42,7 +42,7 @@ void TestString(void) {
     char str8[] = "\x7a\xc3\x9f\xe6\xb0\xb4\xf0\x9f\x8d\x8c";
     printf("str6 = %s\n", str6);
     printf("sizeof str6 = %zu\n", sizeof(str6));
-    wchar_t wstr[sizeof str6 + 1] = {};
+    wchar_t wstr[sizeof str6 + 1] = {0};
     swprintf(wstr, sizeof wstr / sizeof *wstr, L"%s", str6);
     wprintf(L"wstr = %ls\n", wstr);
     printf("strcmp(str6, str7) = %d\n", strcmp(str6, str7));

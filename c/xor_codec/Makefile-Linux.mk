@@ -20,7 +20,7 @@ $(info $$(HEADERS) $(HEADERS))
 
 
 .PHONY: all clean format-code \
-        run-static-release run-static-debug run-shared-release run-shared-debug \
+        run-static-debug run-static-release run-shared-debug run-shared-release \
         build-static-debug build-static-release build-shared-debug build-shared-release
 
 
@@ -32,19 +32,23 @@ all: run-static-release
 
 
 build/static-debug/%.o: %.c | $(STATIC_DEBUG_OBJECT_DIRS)
-	@$(CC) -std=c18 -finput-charset=UTF-8 -fexec-charset=UTF-8 -Wpedantic -Winline -Wall -Wextra -Wno-unused-variable -Wno-unused-function -Wno-unused-local-typedefs -Wno-unused-parameter -O0 -g3 -c -o $@ $<
+	@$(CC) -std=c18 -finput-charset=UTF-8 -fexec-charset=UTF-8 -Wpedantic -Winline -Wall -Wextra -Wno-unused-variable \
+	       -Wno-unused-function -Wno-unused-local-typedefs -Wno-unused-parameter -O0 -g3 -c -o $@ $<
 
 
 build/static-release/%.o: %.c | $(STATIC_RELEASE_OBJECT_DIRS)
-	@$(CC) -std=c18 -finput-charset=UTF-8 -fexec-charset=UTF-8 -Wpedantic -Winline -Wall -Wextra -Wno-unused-variable -Wno-unused-function -Wno-unused-local-typedefs -Wno-unused-parameter -O3 -DNDEBUG -flto -c -o $@ $<
+	@$(CC) -std=c18 -finput-charset=UTF-8 -fexec-charset=UTF-8 -Wpedantic -Winline -Wall -Wextra -Wno-unused-variable \
+           -Wno-unused-function -Wno-unused-local-typedefs -Wno-unused-parameter -O3 -DNDEBUG -flto -c -o $@ $<
 
 
 build/shared-debug/%.o: %.c | $(SHARED_DEBUG_OBJECT_DIRS)
-	@$(CC) -std=c18 -finput-charset=UTF-8 -fexec-charset=UTF-8 -Wpedantic -Winline -Wall -Wextra -Wno-unused-variable -Wno-unused-function -Wno-unused-local-typedefs -Wno-unused-parameter -O0 -g3 -DXOR_CODEC_EXPORTS -fPIC -c -o $@ $<
+	@$(CC) -std=c18 -finput-charset=UTF-8 -fexec-charset=UTF-8 -Wpedantic -Winline -Wall -Wextra -Wno-unused-variable \
+	       -Wno-unused-function -Wno-unused-local-typedefs -Wno-unused-parameter -O0 -g3 -DXOR_CODEC_EXPORTS -fPIC -c -o $@ $<
 
 
 build/shared-release/%.o: %.c | $(SHARED_RELEASE_OBJECT_DIRS)
-	@$(CC) -std=c18 -finput-charset=UTF-8 -fexec-charset=UTF-8 -Wpedantic -Winline -Wall -Wextra -Wno-unused-variable -Wno-unused-function -Wno-unused-local-typedefs -Wno-unused-parameter -O3 -DNDEBUG -flto -DXOR_CODEC_EXPORTS -fPIC -c -o $@ $<
+	@$(CC) -std=c18 -finput-charset=UTF-8 -fexec-charset=UTF-8 -Wpedantic -Winline -Wall -Wextra -Wno-unused-variable \
+	       -Wno-unused-function -Wno-unused-local-typedefs -Wno-unused-parameter -O3 -DNDEBUG -flto -DXOR_CODEC_EXPORTS -fPIC -c -o $@ $<
 
 
 libxor_codec-static-debug.a: $(STATIC_DEBUG_OBJECTS)
@@ -58,32 +62,32 @@ libxor_codec-static-release.a: $(STATIC_RELEASE_OBJECTS)
 
 
 libxor_codec-shared-debug.so: $(SHARED_DEBUG_OBJECTS)
-	@$(CC) -shared -o $@ $^
+	@$(CC) -shared -Wl,-soname,$@ -Wl,-rpath,'$$ORIGIN' -o $@ $^
 	@echo build shared debug done
 
 
 libxor_codec-shared-release.so: $(SHARED_RELEASE_OBJECTS)
-	@$(CC) -shared -flto -o $@ $^
+	@$(CC) -shared -flto -Wl,-soname,$@ -Wl,-rpath,'$$ORIGIN' -o $@ $^
 	@echo build shared release done
 
 
-xor_codec-static-debug: libxor_codec-static-debug.a build/static-debug/main.o
-	@$(CC) -o $@ build/static-debug/main.o libxor_codec-static-debug.a
+xor_codec-static-debug: build/static-debug/main.o libxor_codec-static-debug.a
+	@$(CC) -o $@ $^
 	@echo build static debug exe done
 
 
-xor_codec-static-release: libxor_codec-static-release.a build/static-release/main.o
-	@$(CC) -flto -o $@ build/static-release/main.o libxor_codec-static-release.a
+xor_codec-static-release: build/static-release/main.o libxor_codec-static-release.a
+	@$(CC) -flto -o $@ $^
 	@echo build static release exe done
 
 
-xor_codec-shared-debug: libxor_codec-shared-debug.so build/static-debug/main.o
-	@$(CC) -o $@ build/static-debug/main.o -L. -lxor_codec-shared-debug -Wl,-rpath,'$$ORIGIN'
+xor_codec-shared-debug: build/static-debug/main.o libxor_codec-shared-debug.so
+	@$(CC) -o $@ $^ -Wl,-rpath,'$$ORIGIN'
 	@echo build shared debug exe done
 
 
-xor_codec-shared-release: libxor_codec-shared-release.so build/static-release/main.o
-	@$(CC) -flto -o $@ build/static-release/main.o -L. -lxor_codec-shared-release -Wl,-rpath,'$$ORIGIN'
+xor_codec-shared-release: build/static-release/main.o libxor_codec-shared-release.so
+	@$(CC) -flto -o $@ $^ -Wl,-rpath,'$$ORIGIN'
 	@echo build shared release exe done
 
 

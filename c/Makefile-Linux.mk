@@ -19,7 +19,7 @@ $(info $$(HEADERS) $(HEADERS))
 
 
 .PHONY: all clean format-code \
-        run-static-release run-static-debug run-shared-release run-shared-debug \
+        run-static-debug run-static-release run-shared-debug run-shared-release \
         build-static-debug build-static-release build-shared-debug build-shared-release
 
 
@@ -31,19 +31,23 @@ all: run-static-release
 
 
 build/static-debug/%.o: %.c | $(STATIC_DEBUG_OBJECT_DIRS)
-	@$(CC) -std=c17 -finput-charset=UTF-8 -fexec-charset=UTF-8 -Wpedantic -Winline -Wall -Wextra -Wno-unused-variable -Wno-unused-function -Wno-unused-local-typedefs -Wno-unused-parameter -O0 -g3 -c -o $@ $<
+	@$(CC) -std=c17 -finput-charset=UTF-8 -fexec-charset=UTF-8 -Wpedantic -Winline -Wall -Wextra -Wno-unused-variable \
+	       -Wno-unused-function -Wno-unused-local-typedefs -Wno-unused-parameter -O0 -g3 -c -o $@ $<
 
 
 build/static-release/%.o: %.c | $(STATIC_RELEASE_OBJECT_DIRS)
-	@$(CC) -std=c17 -finput-charset=UTF-8 -fexec-charset=UTF-8 -Wpedantic -Winline -Wall -Wextra -Wno-unused-variable -Wno-unused-function -Wno-unused-local-typedefs -Wno-unused-parameter -O3 -DNDEBUG -flto -c -o $@ $<
+	@$(CC) -std=c17 -finput-charset=UTF-8 -fexec-charset=UTF-8 -Wpedantic -Winline -Wall -Wextra -Wno-unused-variable \
+	       -Wno-unused-function -Wno-unused-local-typedefs -Wno-unused-parameter -O3 -DNDEBUG -flto -c -o $@ $<
 
 
 build/shared-debug/%.o: %.c | $(SHARED_DEBUG_OBJECT_DIRS)
-	@$(CC) -std=c17 -finput-charset=UTF-8 -fexec-charset=UTF-8 -Wpedantic -Winline -Wall -Wextra -Wno-unused-variable -Wno-unused-function -Wno-unused-local-typedefs -Wno-unused-parameter -O0 -g3 -fPIC -c -o $@ $<
+	@$(CC) -std=c17 -finput-charset=UTF-8 -fexec-charset=UTF-8 -Wpedantic -Winline -Wall -Wextra -Wno-unused-variable \
+	       -Wno-unused-function -Wno-unused-local-typedefs -Wno-unused-parameter -O0 -g3 -fPIC -c -o $@ $<
 
 
 build/shared-release/%.o: %.c | $(SHARED_RELEASE_OBJECT_DIRS)
-	@$(CC) -std=c17 -finput-charset=UTF-8 -fexec-charset=UTF-8 -Wpedantic -Winline -Wall -Wextra -Wno-unused-variable -Wno-unused-function -Wno-unused-local-typedefs -Wno-unused-parameter -O3 -DNDEBUG -flto -fPIC -c -o $@ $<
+	@$(CC) -std=c17 -finput-charset=UTF-8 -fexec-charset=UTF-8 -Wpedantic -Winline -Wall -Wextra -Wno-unused-variable \
+	       -Wno-unused-function -Wno-unused-local-typedefs -Wno-unused-parameter -O3 -DNDEBUG -flto -fPIC -c -o $@ $<
 
 
 libc-static-debug.a: $(STATIC_DEBUG_OBJECTS)
@@ -56,33 +60,33 @@ libc-static-release.a: $(STATIC_RELEASE_OBJECTS)
 	@echo build static release done
 
 
-libc-shared-debug.so: $(SHARED_DEBUG_OBJECTS) bitwise/libbitwise-static-debug.a
-	@$(CC) -shared -o $@ $^
+libc-shared-debug.so: $(SHARED_DEBUG_OBJECTS) bitwise/libbitwise-shared-debug.so
+	@$(CC) -shared -Wl,-soname,$@ -Wl,-rpath,'$$ORIGIN' -o $@ $^
 	@echo build shared debug done
 
 
-libc-shared-release.so: $(SHARED_RELEASE_OBJECTS) bitwise/libbitwise-static-release.a
-	@$(CC) -shared -flto -o $@ $^
+libc-shared-release.so: $(SHARED_RELEASE_OBJECTS) bitwise/libbitwise-shared-release.so
+	@$(CC) -shared -flto -Wl,-soname,$@ -Wl,-rpath,'$$ORIGIN' -o $@ $^
 	@echo build shared release done
 
 
-c-static-debug: libc-static-debug.a build/static-debug/main.o bitwise/libbitwise-static-debug.a
-	@$(CC) -o $@ build/static-debug/main.o libc-static-debug.a bitwise/libbitwise-static-debug.a
+c-static-debug: build/static-debug/main.o libc-static-debug.a bitwise/libbitwise-static-debug.a
+	@$(CC) -o $@ $^
 	@echo build static debug exe done
 
 
-c-static-release: libc-static-release.a build/static-release/main.o bitwise/libbitwise-static-release.a
-	@$(CC) -flto -o $@ build/static-release/main.o libc-static-release.a bitwise/libbitwise-static-release.a
+c-static-release: build/static-release/main.o libc-static-release.a bitwise/libbitwise-static-release.a
+	@$(CC) -flto -o $@ $^
 	@echo build static release exe done
 
 
-c-shared-debug: libc-shared-debug.so build/static-debug/main.o
-	@$(CC) -o $@ build/static-debug/main.o -L. -lc-shared-debug -Wl,-rpath,'$$ORIGIN'
+c-shared-debug: build/static-debug/main.o libc-shared-debug.so bitwise/libbitwise-shared-debug.so
+	@$(CC) -o $@ $^ -Wl,-rpath,'$$ORIGIN'
 	@echo build shared debug exe done
 
 
-c-shared-release: libc-shared-release.so build/static-release/main.o
-	@$(CC) -flto -o $@ build/static-release/main.o -L. -lc-shared-release -Wl,-rpath,'$$ORIGIN'
+c-shared-release: build/static-release/main.o libc-shared-release.so bitwise/libbitwise-shared-release.so
+	@$(CC) -flto -o $@ $^ -Wl,-rpath,'$$ORIGIN'
 	@echo build shared release exe done
 
 
@@ -91,8 +95,7 @@ clean:
 	       libc-static-debug.a libc-static-release.a \
 	       libc-shared-debug.so libc-shared-release.so \
 	       c-static-debug c-static-release \
-	       c-shared-debug c-shared-release \
-	       c-static-debug.exe c-static-release.exe
+	       c-shared-debug c-shared-release
 	@echo clean done
 
 

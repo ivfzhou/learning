@@ -19,7 +19,7 @@ $(info $$(HEADERS) $(HEADERS))
 
 
 .PHONY: all clean format-code \
-        run-static-release run-static-debug run-shared-release run-shared-debug \
+        run-static-debug run-static-release run-shared-debug run-shared-release \
         build-static-debug build-static-release build-shared-debug build-shared-release
 
 
@@ -31,19 +31,23 @@ all: run-static-release
 
 
 build/static-debug/%.o: %.c | $(STATIC_DEBUG_OBJECT_DIRS)
-	@$(CC) -std=c17 -finput-charset=UTF-8 -fexec-charset=UTF-8 -Wpedantic -Winline -Wall -Wextra -Wno-unused-variable -Wno-unused-function -Wno-unused-local-typedefs -Wno-unused-parameter -O0 -g3 -c -o $@ $<
+	@$(CC) -std=c17 -finput-charset=UTF-8 -fexec-charset=UTF-8 -Wpedantic -Winline -Wall -Wextra -Wno-unused-variable \
+	       -Wno-unused-function -Wno-unused-local-typedefs -Wno-unused-parameter -O0 -g3 -c -o $@ $<
 
 
 build/static-release/%.o: %.c | $(STATIC_RELEASE_OBJECT_DIRS)
-	@$(CC) -std=c17 -finput-charset=UTF-8 -fexec-charset=UTF-8 -Wpedantic -Winline -Wall -Wextra -Wno-unused-variable -Wno-unused-function -Wno-unused-local-typedefs -Wno-unused-parameter -O3 -DNDEBUG -flto -c -o $@ $<
+	@$(CC) -std=c17 -finput-charset=UTF-8 -fexec-charset=UTF-8 -Wpedantic -Winline -Wall -Wextra -Wno-unused-variable \
+	       -Wno-unused-function -Wno-unused-local-typedefs -Wno-unused-parameter -O3 -DNDEBUG -flto -c -o $@ $<
 
 
 build/shared-debug/%.o: %.c | $(SHARED_DEBUG_OBJECT_DIRS)
-	@$(CC) -std=c17 -finput-charset=UTF-8 -fexec-charset=UTF-8 -Wpedantic -Winline -Wall -Wextra -Wno-unused-variable -Wno-unused-function -Wno-unused-local-typedefs -Wno-unused-parameter -O0 -g3 -DBITWISE_NEGATION_EXPORTS -fPIC -c -o $@ $<
+	@$(CC) -std=c17 -finput-charset=UTF-8 -fexec-charset=UTF-8 -Wpedantic -Winline -Wall -Wextra -Wno-unused-variable \
+	       -Wno-unused-function -Wno-unused-local-typedefs -Wno-unused-parameter -O0 -g3 -DBITWISE_NEGATION_EXPORTS -fPIC -c -o $@ $<
 
 
 build/shared-release/%.o: %.c | $(SHARED_RELEASE_OBJECT_DIRS)
-	@$(CC) -std=c17 -finput-charset=UTF-8 -fexec-charset=UTF-8 -Wpedantic -Winline -Wall -Wextra -Wno-unused-variable -Wno-unused-function -Wno-unused-local-typedefs -Wno-unused-parameter -O3 -DNDEBUG -flto -DBITWISE_NEGATION_EXPORTS -fPIC -c -o $@ $<
+	@$(CC) -std=c17 -finput-charset=UTF-8 -fexec-charset=UTF-8 -Wpedantic -Winline -Wall -Wextra -Wno-unused-variable \
+	       -Wno-unused-function -Wno-unused-local-typedefs -Wno-unused-parameter -O3 -DNDEBUG -flto -DBITWISE_NEGATION_EXPORTS -fPIC -c -o $@ $<
 
 
 libbitwise_negation-static-debug.a: $(STATIC_DEBUG_OBJECTS)
@@ -57,32 +61,32 @@ libbitwise_negation-static-release.a: $(STATIC_RELEASE_OBJECTS)
 
 
 libbitwise_negation-shared-debug.so: $(SHARED_DEBUG_OBJECTS)
-	@$(CC) -shared -o $@ $^
+	@$(CC) -shared -Wl,-soname,$@ -Wl,-rpath,'$$ORIGIN' -o $@ $^
 	@echo build shared debug done
 
 
 libbitwise_negation-shared-release.so: $(SHARED_RELEASE_OBJECTS)
-	@$(CC) -shared -flto -o $@ $^
+	@$(CC) -shared -flto -Wl,-soname,$@ -Wl,-rpath,'$$ORIGIN' -o $@ $^
 	@echo build shared release done
 
 
-bitwise_negation-static-debug: libbitwise_negation-static-debug.a build/static-debug/main.o
-	@$(CC) -o $@ build/static-debug/main.o libbitwise_negation-static-debug.a
+bitwise_negation-static-debug: build/static-debug/main.o libbitwise_negation-static-debug.a
+	@$(CC) -o $@ $^
 	@echo build static debug exe done
 
 
-bitwise_negation-static-release: libbitwise_negation-static-release.a build/static-release/main.o
-	@$(CC) -flto -o $@ build/static-release/main.o libbitwise_negation-static-release.a
+bitwise_negation-static-release: build/static-release/main.o libbitwise_negation-static-release.a
+	@$(CC) -flto -o $@ $^
 	@echo build static release exe done
 
 
-bitwise_negation-shared-debug: libbitwise_negation-shared-debug.so build/static-debug/main.o
-	@$(CC) -o $@ build/static-debug/main.o -L. -lbitwise_negation-shared-debug -Wl,-rpath,'$$ORIGIN'
+bitwise_negation-shared-debug:build/static-debug/main.o libbitwise_negation-shared-debug.so
+	@$(CC) -o $@ $^ -Wl,-rpath,'$$ORIGIN'
 	@echo build shared debug exe done
 
 
-bitwise_negation-shared-release: libbitwise_negation-shared-release.so build/static-release/main.o
-	@$(CC) -flto -o $@ build/static-release/main.o -L. -lbitwise_negation-shared-release -Wl,-rpath,'$$ORIGIN'
+bitwise_negation-shared-release: build/static-release/main.o libbitwise_negation-shared-release.so
+	@$(CC) -flto -o $@ $^ -Wl,-rpath,'$$ORIGIN'
 	@echo build shared release exe done
 
 

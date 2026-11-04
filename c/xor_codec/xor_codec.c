@@ -29,7 +29,7 @@ int xorCodec(const char* secret, const char* inputFile, const char* outputFile) 
     }
 
     const size_t len = strlen(secret);
-    int cursor = 0;
+    size_t cursor = 0;
     unsigned char ch;
 
     // 简单判断输入输出文件相同。

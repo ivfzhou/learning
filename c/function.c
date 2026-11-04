@@ -3,7 +3,7 @@
 #include "function.h"
 
 // inline 函数在每个使用它们的编译单元中都有自己的实例。
-inline void inlineFunc(void) { printf("hello world\n"); }
+static inline void inlineFunc(void) { printf("hello world\n"); }
 
 // static 函数只能在一个源文件中可见。
 static void staticFunc(void) {}
