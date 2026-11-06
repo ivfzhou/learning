@@ -1,5 +1,5 @@
-#ifndef COM_GITEE_IVFZHOU_C_BITWISE_H
-#define COM_GITEE_IVFZHOU_C_BITWISE_H
+#ifndef CN_IVFZHOU_C_BITWISE_H
+#define CN_IVFZHOU_C_BITWISE_H
 
 #include <stdlib.h>
 

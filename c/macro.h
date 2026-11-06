@@ -1,5 +1,5 @@
-#ifndef COM_GITEE_IVFZHOU_C_MACRO_H
-#define COM_GITEE_IVFZHOU_C_MACRO_H
+#ifndef CN_IVFZHOU_C_MACRO_H
+#define CN_IVFZHOU_C_MACRO_H
 
 #include "export.h"
 

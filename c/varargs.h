@@ -1,5 +1,5 @@
-#ifndef COM_GITEE_IVFZHOU_C_VARARGS_H
-#define COM_GITEE_IVFZHOU_C_VARARGS_H
+#ifndef CN_IVFZHOU_C_VARARGS_H
+#define CN_IVFZHOU_C_VARARGS_H
 
 #include "export.h"
 
