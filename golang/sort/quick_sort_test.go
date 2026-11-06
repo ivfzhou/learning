@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"gitee.com/ivfzhou/my_learning_code/study_golang/sort"
+	"gitee.com/ivfzhou/learning/golang/sort"
 )
 
 func TestQuickSort(t *testing.T) {

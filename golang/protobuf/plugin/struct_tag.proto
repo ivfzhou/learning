@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package struct_tag;
 
-option go_package = "github.com/ivfzhou/study_golang/protobuf/plugin;main";
+option go_package = "github.com/ivfzhou/learning/golang/protobuf/plugin;main";
 
 import "google/protobuf/descriptor.proto";
 

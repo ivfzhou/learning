@@ -15,8 +15,8 @@ package example_test
 import (
 	"testing"
 
-	"github.com/ivfzhou/study_golang/myrpc/example"
-	"github.com/ivfzhou/study_golang/myrpc/server"
+	"github.com/ivfzhou/learning/golang/myrpc/example"
+	"github.com/ivfzhou/learning/golang/myrpc/server"
 )
 
 func TestExample(t *testing.T) {

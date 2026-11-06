@@ -1,6 +1,6 @@
 package b
 
-import "gitee.com/ivfzhou/study_golang/language_specification/mvs/e"
+import "gitee.com/ivfzhou/learning/golang/language_specification/mvs/e"
 
 func Version() string {
 	_ = e.Version()

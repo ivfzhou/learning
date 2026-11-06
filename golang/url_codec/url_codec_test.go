@@ -3,7 +3,7 @@ package url_codec_test
 import (
 	"testing"
 
-	urlcodec "gitee.com/ivfzhou/my_learning_code/study_golang/url_codec"
+	urlcodec "gitee.com/ivfzhou/learning/golang/url_codec"
 )
 
 func TestEncode(t *testing.T) {

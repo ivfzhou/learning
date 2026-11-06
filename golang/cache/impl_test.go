@@ -20,7 +20,7 @@ import (
 	"testing"
 	"time"
 
-	"gitee.com/ivfzhou/study_golang/cache"
+	"gitee.com/ivfzhou/golang/cache"
 )
 
 func TestCache(t *testing.T) {

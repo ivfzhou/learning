@@ -9,7 +9,7 @@ package importing
 import (
 	reflect "reflect"
 
-	public "gitee.com/ivfzhou/my_learning_code/study_golang/protobuf/public"
+	public "gitee.com/ivfzhou/learning/golang/protobuf/public"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	descriptorpb "google.golang.org/protobuf/types/descriptorpb"

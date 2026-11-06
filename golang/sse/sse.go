@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"time"
 
-	"gitee.com/ivfzhou/my_learning_code/study_golang/common"
+	"gitee.com/ivfzhou/learning/golang/common"
 )
 
 func main() {

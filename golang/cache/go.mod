@@ -8,6 +8,6 @@
 // MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
 // See the Mulan PSL v2 for more details.
 
-module gitee.com/ivfzhou/study_golang/cache
+module gitee.com/ivfzhou/golang/cache
 
 go 1.21

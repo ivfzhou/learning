@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package protobuf.public;
 
-option go_package = "github.com/ivfzhou/study_golang/protobuf/public;public";
+option go_package = "github.com/ivfzhou/learning/golang/protobuf/public;public";
 
 message Data {
   string name = 1;

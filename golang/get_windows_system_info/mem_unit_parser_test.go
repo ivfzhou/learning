@@ -3,7 +3,7 @@ package get_windows_system_info_test
 import (
 	"testing"
 
-	wincmd "gitee.com/ivfzhou/my_learning_code/study_golang/get_windows_system_info"
+	wincmd "gitee.com/ivfzhou/learning/golang/get_windows_system_info"
 )
 
 func TestMemUnitParse(t *testing.T) {

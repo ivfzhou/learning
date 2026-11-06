@@ -1,8 +1,8 @@
 package main
 
 import (
-	"gitee.com/ivfzhou/study_golang/language_specification/mvs/a"
-	"gitee.com/ivfzhou/study_golang/language_specification/mvs/b"
+	"gitee.com/ivfzhou/learning/golang/language_specification/mvs/a"
+	"gitee.com/ivfzhou/learning/golang/language_specification/mvs/b"
 )
 
 func main() {

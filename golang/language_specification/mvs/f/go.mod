@@ -1,3 +1,3 @@
-module gitee.com/ivfzhou/study_golang/language_specification/mvs/f
+module gitee.com/ivfzhou/learning/golang/language_specification/mvs/f
 
 go 1.21

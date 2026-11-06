@@ -4,7 +4,7 @@ import (
 	"math/rand"
 	"testing"
 
-	"gitee.com/ivfzhou/my_learning_code/study_golang/sort"
+	"gitee.com/ivfzhou/learning/golang/sort"
 )
 
 func TestDichotomySearch(t *testing.T) {

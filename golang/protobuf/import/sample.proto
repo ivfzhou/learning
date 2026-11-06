@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package protobuf.import;
 
-option go_package = "github.com/ivfzhou/study_golang/protobuf/import;importing";
+option go_package = "github.com/ivfzhou/learning/golang/protobuf/import;importing";
 
 import public "protobuf/public/sample.proto";
 import "google/protobuf/descriptor.proto";

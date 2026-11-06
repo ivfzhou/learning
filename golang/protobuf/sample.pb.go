@@ -12,8 +12,8 @@ import (
 	reflect "reflect"
 	sync "sync"
 
-	_ "gitee.com/ivfzhou/my_learning_code/study_golang/protobuf/import"
-	public "gitee.com/ivfzhou/my_learning_code/study_golang/protobuf/public"
+	_ "gitee.com/ivfzhou/learning/golang/protobuf/import"
+	public "gitee.com/ivfzhou/learning/golang/protobuf/public"
 	_ "github.com/ivfzhou/protobuf-go/cmd/protoc-gen-go/descriptor"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"

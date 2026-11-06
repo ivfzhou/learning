@@ -1,4 +1,4 @@
-module gitee.com/ivfzhou/my_learning_code/study_golang
+module gitee.com/ivfzhou/learning/golang
 
 go 1.27
 

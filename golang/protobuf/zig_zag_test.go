@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"gitee.com/ivfzhou/my_learning_code/study_golang/protobuf"
+	"gitee.com/ivfzhou/learning/golang/protobuf"
 )
 
 func TestEncode(t *testing.T) {

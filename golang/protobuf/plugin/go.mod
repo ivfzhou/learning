@@ -1,4 +1,4 @@
-module github.com/ivfzhou/study_golang/protobuf/plugin
+module github.com/ivfzhou/learning/golang/protobuf/plugin
 
 go 1.19
 

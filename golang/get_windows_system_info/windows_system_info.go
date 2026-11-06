@@ -13,7 +13,7 @@ import (
 	"golang.org/x/text/encoding/simplifiedchinese"
 	"golang.org/x/text/transform"
 
-	mstrings "gitee.com/ivfzhou/my_learning_code/study_golang/strings"
+	mstrings "gitee.com/ivfzhou/learning/golang/strings"
 )
 
 func GetCPU() (string, error) {

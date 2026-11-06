@@ -5,11 +5,11 @@ Golang本地缓存器， 变量缓存本地进程内存中，超时释放。
 # 使用
 
 ```shell
-go get gitee.com/ivfzhou/study_golang/cache@latest
+go get gitee.com/ivfzhou/golang/cache@latest
 ```
 
 ```golang
-import cache "gitee.com/ivfzhou/study_golang/cache"
+import cache "gitee.com/ivfzhou/golang/cache"
 
 // 创建缓存
 c := cache.New()

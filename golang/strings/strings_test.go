@@ -3,7 +3,7 @@ package strings_test
 import (
 	"testing"
 
-	"gitee.com/ivfzhou/my_learning_code/study_golang/strings"
+	"gitee.com/ivfzhou/learning/golang/strings"
 )
 
 func TestIndex(t *testing.T) {

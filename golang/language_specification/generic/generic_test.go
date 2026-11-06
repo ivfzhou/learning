@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"gitee.com/ivfzhou/my_learning_code/study_golang/language_specification/generic"
+	"gitee.com/ivfzhou/learning/golang/language_specification/generic"
 )
 
 func TestGeneric(t *testing.T) {

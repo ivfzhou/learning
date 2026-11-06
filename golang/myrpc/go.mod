@@ -8,7 +8,7 @@
 // MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
 // See the Mulan PSL v2 for more details.
 
-module github.com/ivfzhou/study_golang/myrpc
+module github.com/ivfzhou/learning/golang/myrpc
 
 go 1.21
 

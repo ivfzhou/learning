@@ -9,8 +9,8 @@ import (
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/anypb"
 
-	"gitee.com/ivfzhou/my_learning_code/study_golang/protobuf"
-	importing "gitee.com/ivfzhou/my_learning_code/study_golang/protobuf/import"
+	"gitee.com/ivfzhou/learning/golang/protobuf"
+	importing "gitee.com/ivfzhou/learning/golang/protobuf/import"
 )
 
 func TestSample(t *testing.T) {

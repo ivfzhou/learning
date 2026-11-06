@@ -1,4 +1,4 @@
-module gitee.com/ivfzhou/study_golang/language_specification/mvs/has_exclude
+module gitee.com/ivfzhou/learning/golang/language_specification/mvs/has_exclude
 
 go 1.21
 

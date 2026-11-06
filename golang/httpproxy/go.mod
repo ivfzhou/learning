@@ -1,3 +1,3 @@
-module gitee.com/ivfzhou/study_golang/httpproxy
+module gitee.com/ivfzhou/learning/golang/httpproxy
 
 go 1.23

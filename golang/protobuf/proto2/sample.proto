@@ -2,7 +2,7 @@ syntax = "proto2";
 
 package proto2;
 
-option go_package = "github.com/ivfzhou/study_golang/protobuf/proto2;proto2";
+option go_package = "github.com/ivfzhou/learning/golang/protobuf/proto2;proto2";
 
 message Req {
   required int32 ID = 1;

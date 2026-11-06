@@ -3,7 +3,7 @@ syntax = "proto3"; // 默认 proto2。
 
 package protobuf; // 导入其它 message 时使用。
 
-option go_package = "github.com/ivfzhou/study_golang/protobuf;protobuf"; // 前部分为生成文件路径和包全称，后部分为生成文件包名（默认为前部分最后一个元素）。
+option go_package = "github.com/ivfzhou/learning/golang/protobuf;protobuf"; // 前部分为生成文件路径和包全称，后部分为生成文件包名（默认为前部分最后一个元素）。
 option java_package = "ivfzhou.java.protobuf"; // java 文件 class 名，如果未定义，使用 package 定义的值。
 option java_outer_classname = "Protobuf"; // 在编译成 java 代码时使用，如果未定义，使用将文件名转化为大驼峰格式的值。
 option java_multiple_files = true; // 默认生成一个 .java 文件，一个类，里面包含所有其它类。
