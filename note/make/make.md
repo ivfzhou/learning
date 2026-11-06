@@ -30,12 +30,6 @@ your_target:
 .SECONDEXPASION:
 
 
-# 特殊目标的含义是，在之后的脚本中，配方开头不用 tab 而用 >。
-.RECIPEPREFIX = >
-your_target:
->echo abc
-
-
 # 有 & 符号表示，一次执行配方会生成两个目标；没有 & 符号就会执行两个配置。
 your_target your_target2: prerequisites
 your_target your_target2 &: prerequisites
@@ -88,6 +82,16 @@ your_target: CFLAGS := $(CFLAGS_DEBUG)
 your_target: override CFLAGS := $(CFLAGS_DEBUG) # override 让专属值优先。
 # 执行 Recipe 时，将有 PATH 环境变量。
 export PATH := ...
+
+
+# 内置变量，在之后的脚本中，配方开头不用 tab 而用 >。
+.RECIPEPREFIX = >
+your_target:
+>echo abc
+
+
+# 内置变量，传给 shell 的命令行参数。
+.SHELLFLAGS
 
 
 # 目标和依赖中的 % 号表示模式匹配。
