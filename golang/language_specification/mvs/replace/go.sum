@@ -1,2 +1,6 @@
-gitee.com/ivfzhou/learning/golang/language_specification/mvs/d v1.3.0 h1:mQX01y0yLM3GmIw32DUrxkyvUmJCnoQ6cwzC5FsYK4U=
-gitee.com/ivfzhou/learning/golang/language_specification/mvs/d v1.3.0/go.mod h1:OkiNfOBQgRhW+vXwQibkrxjAipzZxux0f1IwKoGjo9A=
+gitee.com/ivfzhou/learning/golang/language_specification/mvs/a v1.2.0 h1:VzMAmXMkm7Pjywh1X1H5zlknAVzAM7DqJl9pq0SNGiE=
+gitee.com/ivfzhou/learning/golang/language_specification/mvs/a v1.2.0/go.mod h1:nX6Oej0F/Ak+Cg8yiZRBq/6y6rBbVC2jMT/GzDlH0t0=
+gitee.com/ivfzhou/learning/golang/language_specification/mvs/b v1.2.0 h1:SFaH8n1P8oxtWuBdr8+Cm9iM81HhHWbJAzWCRFFm3vE=
+gitee.com/ivfzhou/learning/golang/language_specification/mvs/b v1.2.0/go.mod h1:0qqkQrBYI8o/QpsZINc80AxZZf/HNf7E6VFNx6nsa7U=
+gitee.com/ivfzhou/learning/golang/language_specification/mvs/d v1.3.0 h1:dkVf45SNzd/gBTHsJ4HbbCiec3vo+m2YkqQEiuE0fTg=
+gitee.com/ivfzhou/learning/golang/language_specification/mvs/d v1.3.0/go.mod h1:mZr6ejtf+X320uIhtavl+NxsIxEYUwMmcjL+PokSeaM=

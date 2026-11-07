@@ -1,8 +1,11 @@
-package c
+package main
 
-import "gitee.com/ivfzhou/learning/golang/language_specification/mvs/d"
+import (
+	"gitee.com/ivfzhou/learning/golang/language_specification/mvs/a"
+	"gitee.com/ivfzhou/learning/golang/language_specification/mvs/b"
+)
 
-func Version() string {
-	_ = d.Version()
-	return "v1.5.0"
+func main() {
+	println(a.Version())
+	println(b.Version())
 }
