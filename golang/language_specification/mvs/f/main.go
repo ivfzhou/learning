@@ -1,5 +1,8 @@
 package f
 
+import "gitee.com/ivfzhou/learning/golang/language_specification/mvs/e"
+
 func Version() string {
-	return "v1.0.0"
+	_ = e.Version()
+	return "v1.1.0"
 }
