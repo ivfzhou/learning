@@ -6,6 +6,8 @@ import (
 	"bytes"
 	"os"
 	"testing"
+
+	"gitee.com/ivfzhou/learning/golang/invoke_c_code"
 )
 
 func TestNewBZip2Writer(t *testing.T) {
