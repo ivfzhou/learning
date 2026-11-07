@@ -1,6 +1,6 @@
 # 一、笔记
 
-1. 
+1. make 官方参考手册：https://www.gnu.org/software/make/manual/make.pdf。
 
 # 二、语法
 

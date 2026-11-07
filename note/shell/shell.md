@@ -1,7 +1,7 @@
 # 一、笔记
 
-1. [POSIX Shell 语法](https://pubs.opengroup.org/onlinepubs/9799919799/idx/shell.html)。
-1. [Bash 语法](https://www.gnu.org/software/bash/manual/html_node/index.html)。
+1. POSIX Shell 文档 https://pubs.opengroup.org/onlinepubs/9799919799/，Shell and Utilities 卷里的 Shell Command Language 章节。
+1. Bash 官方参考手册：https://www.gnu.org/software/bash/manual/bash.pdf。
 1. 波浪号 ~ 扩展发生在变量扩展之前，~\$user 展开为名为 \$user 的用户的家目录。
 1. /etc/shells 系统支持的 shell。
 1. ctrl+z 挂起当前进程；ctrl+d 发送 EOF 信号。
@@ -695,7 +695,7 @@ ls *选项*... *文件*...：列出文件信息，默认当前工作区。
 
 示例：
 ```bash
-alias ll='ls -l --author -b --color=auto --classify=always --group-directories-first -a -i -s --time=mtime --time-style="+%Y-%m-%d %H:%M:%S.%3N %z"'
+alias ll='ls -l --author -b --color=auto --classify=always --group-directories-first -a -i -s --time=mtime --time-style="+%Y-%m-%d/%H:%M:%S.%3N%z"'
 ```
 
 ll 输出列的含义：

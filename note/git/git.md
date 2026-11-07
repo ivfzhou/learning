@@ -1,5 +1,6 @@
 # 一、笔记
 
+1. 官网 https://git-scm.com/。
 1. Git 源码包中的命令补齐脚本 `contrib/completion/git-completion.bash` 复制到 `/etc/bash_completion.d/` 对应的目录中。重新加载自动补齐脚本，使之在当前的 shell 中生效 `. /etc/bash_completion`。
 1. ![](./工作区、版本库、暂存区原理图.jpeg)
 
