@@ -52,7 +52,7 @@ static void testScanf3(void) {
     printf("str2=%s\n", str2);
 }
 
-static void testAll() {
+static void testAll(void) {
     TestAlignment();
     TestArray();
     TestAssertion();

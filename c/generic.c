@@ -4,7 +4,7 @@
 
 #include "generic.h"
 
-static char* selectStr() { return "fn"; }
+static char* selectStr(void) { return "fn"; }
 
 void TestGeneric(void) {
     unsigned x = 9;

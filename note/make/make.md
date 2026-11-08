@@ -1,6 +1,7 @@
 # 一、笔记
 
 1. make 官方参考手册：https://www.gnu.org/software/make/manual/make.pdf。
+1. 提取所有目标：`make -qp | awk -F':' '/^[a-zA-Z0-9][^$#\/\t=]*:([^=]|$)/ {split($1,A,/ /);for(i in A)print A[i]}' | sort -u`。
 
 # 二、语法
 
@@ -125,9 +126,10 @@ $(info info message)
 $(warnning warnning message)
 $(error error message)
 LIST := $(addprefix build/,$(OBJECTS))
-LIST := $(sort $(LIST))
+LIST := $(sort $(LIST)) # 去重。
 VAR := $(dir $(VAR))
-LIST := $(filter-out elem,$(LIST))
+LIST := $(filter-out %_test.c,$(LIST))
+LIST := $(filter %_test.c,$(LIST))
 ```
 
 # 三、命令
