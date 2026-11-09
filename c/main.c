@@ -62,6 +62,7 @@ static void testAll(void) {
     TestFlowStatement();
     TestFunction();
     TestGeneric();
+    TestGeneric2();
     TestMacro();
     TestString();
     TestStruct();

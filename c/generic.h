@@ -5,4 +5,6 @@
 
 C_API void TestGeneric(void);
 
+C_API void TestGeneric2(void);
+
 #endif
