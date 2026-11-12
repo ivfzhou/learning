@@ -2,7 +2,11 @@
 
 ## 1.1 笔记
 
+1. [c17_n2176_fdis.pdf](./c17_n2176_fdis.pdf)
+1. [c24_n3220.pdf](./c24_n3220.pdf)
 1. [Information technology —Programming languages — C ISO/IEC 9899 2018](./ISO_IEC_9899_2018.pdf)
+1. [c++20_n4861_fdis.pdf](./c++20_n4861_fdis.pdf)
+1. [c++23_n4950_fdis.pdf](./c++23_n4950_fdis.pdf)
 1. [Programming languages — C++ ISO/IEC 14882 2020](./ISO_IEC_14882_2020.pdf)
 1. 编译时头文件查找规则：
    - 双引号的头文件查找顺序：
