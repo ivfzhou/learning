@@ -277,12 +277,13 @@ git am /path/to/patches/*.patch
 - `git branch -D <branch-name>`：强制删除本地分支（无论是否已合并）。
 - `git branch -m <branch-name> <new-branch-name>`：重命名本地分支（目标不存在时使用）。
 - `git branch -M <branch-name> <new-branch-name>`：强制重命名本地分支（若目标已存在则覆盖）。
-- `git pull <origin> <branch>`：从远程 origin 的指定分支拉取变动并与当前本地分支合并。
-- `git push -u <origin> <branch-name>`：推送本地分支到远程 origin 并建立上游（upstream）跟踪关系。
+- `git pull <origin> <remote-branch>:<local-branch>`：从远程 origin 的指定分支拉取变动并与当前本地分支合并。
+- `git push -u <origin> <local-brancn>:<remote-branch>`：推送本地分支到远程 origin 并建立上游（upstream）跟踪关系。
 - `git push <origin> --tags`：将本地所有 tag 推送到远程仓库。
 - `git push <origin> <tag-name>`：将本地指定的单个 tag 推送到远程仓库。
 - `git push <origin> --all`：将本地所有分支推送到远程仓库。
 - `git merge <branch-name>`：将指定分支合并到当前分支，并保留合并提交历史。
+- `git fetch <origin> <remote-branch>:<local-branch>`：更新本地分支。
 
 ## 9.13 日志
 
